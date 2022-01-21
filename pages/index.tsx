@@ -5,7 +5,9 @@ import styles from '../styles/Home.module.css';
 
 import {useSession, signIn, signOut} from 'next-auth/react';
 
-const Home: NextPage = () => {
+import {Button, ButtonGroup} from '@chakra-ui/react';
+
+const Landing: NextPage = () => {
   const {data: session} = useSession();
   console.log(session);
 
@@ -17,20 +19,20 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <>
+      <div style={{margin: 'auto', top: 100, position: 'absolute'}}>
         {!session && (
           <>
             Not signed in <br />
-            <button onClick={() => signIn()}>Sign in</button>
+            <Button onClick={() => signIn()}>Sign in</Button>
           </>
         )}
         {session && (
           <>
             Signed in as {session.user.email} <br />
-            <button onClick={() => signOut()}>Sign out</button>
+            <Button onClick={() => signOut()}>Sign out</Button>
           </>
         )}
-      </>
+      </div>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
@@ -86,4 +88,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Landing;

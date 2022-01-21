@@ -1,17 +1,37 @@
-import { SessionProvider } from "next-auth/react";
-import type { AppProps } from "next/app";
-import "../styles/globals.css";
+import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { DashboardLayout } from '../components';
+import 'yakuhanjp/dist/css/yakuhanjp_s.css';
 
-// Use the <SessionProvider> to improve performance and allow components that call
-// `useSession()` anywhere in your application to access the `session` object.
+const theme = extendTheme({
+  fonts: {
+    heading: 'YakuHanJPs',
+    body: 'YakuHanJPs',
+  },
+});
+
 export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <SessionProvider
-      // Provider options are not required but can be useful in situations where
-      // you have a short session maxAge time. Shown here with default values.
-      session={pageProps.session}
-    >
-      <Component {...pageProps} />
-    </SessionProvider>
-  );
+  switch (pageProps.layout) {
+    case 'dashboard': {
+      return (
+        <SessionProvider session={pageProps.session}>
+          <ChakraProvider theme={theme}>
+            <DashboardLayout>
+              <Component {...pageProps} />
+            </DashboardLayout>
+          </ChakraProvider>
+        </SessionProvider>
+      );
+    }
+    default: {
+      return (
+        <SessionProvider session={pageProps.session}>
+          <ChakraProvider theme={theme}>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </SessionProvider>
+      );
+    }
+  }
 }
