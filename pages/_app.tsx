@@ -1,7 +1,7 @@
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import { DashboardLayout } from '../components';
+import { DashboardLayout, StandardLayout } from '../components/layouts';
 import 'yakuhanjp/dist/css/yakuhanjp_s.css';
 import { ReactNode } from 'react';
 
@@ -21,7 +21,9 @@ export default function App({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </DashboardLayout>
         ) : (
-          <Component {...pageProps} />
+          <StandardLayout>
+            <Component {...pageProps} />
+          </StandardLayout>
         )}
       </SessionProvider>
     </ChakraProvider>

@@ -19,17 +19,27 @@ const Landing: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div style={{ margin: 'auto', top: 100, position: 'absolute' }}>
+      <div
+        style={{
+          margin: 'auto',
+          top: 100,
+          position: 'absolute',
+        }}
+      >
         {!session && (
           <>
             Not signed in <br />
-            <Button onClick={() => signIn()}>Sign in</Button>
+            <Button onClick={() => signIn()} style={{ color: '#334364' }}>
+              Sign in
+            </Button>
           </>
         )}
         {session && (
           <>
             Signed in as {session.user.email} <br />
-            <Button onClick={() => signOut()}>Sign out</Button>
+            <Button onClick={() => signOut()} style={{ color: '#334364' }}>
+              Sign out
+            </Button>
           </>
         )}
       </div>
@@ -41,7 +51,9 @@ const Landing: NextPage = () => {
 
         <p className={styles.description}>
           Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
+          <code className={styles.code} style={{ color: '#334364' }}>
+            pages/index.tsx
+          </code>
         </p>
 
         <div className={styles.grid}>
