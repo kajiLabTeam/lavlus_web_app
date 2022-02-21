@@ -14,8 +14,8 @@ const theme = extendTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <SessionProvider session={pageProps.session}>
-      <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme}>
+      <SessionProvider session={pageProps.session}>
         {pageProps.layout === 'dashboard' ? (
           <DashboardLayout>
             <Component {...pageProps} />
@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
         ) : (
           <Component {...pageProps} />
         )}
-      </ChakraProvider>
-    </SessionProvider>
+      </SessionProvider>
+    </ChakraProvider>
   );
 }

@@ -40,7 +40,7 @@ const notificationItems = [
 
 export const Notification = ((props: BoxProps) => {
   return (
-    <Box Box {...props}>
+    <Box {...props}>
       <Center w="100%" h={10} bg="gray.500" borderRadius="full" mb={12}>
         <Text fontSize="lg" fontWeight="bold">
           Notifications

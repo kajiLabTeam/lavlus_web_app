@@ -1,13 +1,26 @@
 import { useRouter } from 'next/router';
 // components
-import { Box, Grid, GridItem, Container, BoxProps } from '@chakra-ui/react';
+import {
+  Box,
+  Grid,
+  GridItem,
+  Container,
+  BoxProps,
+  ChakraComponent,
+} from '@chakra-ui/react';
 import { Header, Drawer, Notification } from '../../components';
 
-export const DashboardLayout: React.FC<BoxProps> = ({ children }) => {
+export const DashboardLayout = ((props: BoxProps) => {
   const router = useRouter();
   const { username, projectId } = router.query;
   return (
-    <Box bg="blue.800" minW="container.sm" minH="100vh" color="white">
+    <Box
+      bg="blue.800"
+      minW="container.sm"
+      minH="100vh"
+      color="white"
+      {...props}
+    >
       <Header />
       {/* 最大幅を設定 */}
       <Container as="main" maxW="1440px" p={0} centerContent>
@@ -26,7 +39,7 @@ export const DashboardLayout: React.FC<BoxProps> = ({ children }) => {
           <GridItem as="section">
             <Drawer position="sticky" top={24} />
           </GridItem>
-          <GridItem as="section">{children}</GridItem>
+          <GridItem as="section">{props.children}</GridItem>
           <GridItem as="aside" d={{ base: 'none', xl: 'block' }}>
             <Notification position="sticky" top={24} />
           </GridItem>
@@ -34,4 +47,4 @@ export const DashboardLayout: React.FC<BoxProps> = ({ children }) => {
       </Container>
     </Box>
   );
-};
+}) as ChakraComponent<'div', {}>;

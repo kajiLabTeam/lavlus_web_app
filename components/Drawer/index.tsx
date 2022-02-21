@@ -17,9 +17,9 @@ import { LavlusIcon } from '../../common/icons';
 import { DrawerItem } from './DrawerItem';
 
 const links = [
-  { label: 'Home', href: '', icon: AiFillHome },
-  { label: 'Home3', href: 'home3', icon: AiFillDashboard },
-  { label: 'Data', href: 'data', icon: AiFillDatabase },
+  { key: 'bdfwtgh', label: 'Home', href: '', icon: AiFillHome },
+  { key: 'frgetgn', label: 'Home3', href: 'home3', icon: AiFillDashboard },
+  { key: 'vbnjnmk', label: 'Data', href: 'data', icon: AiFillDatabase },
 ];
 
 export const Drawer = ((props: BoxProps) => {
@@ -31,7 +31,7 @@ export const Drawer = ((props: BoxProps) => {
   return (
     <Box {...props}>
       <VStack spacing={6}>
-        <Avatar size={isXl ? 'lg' : 'md'} />
+        <Avatar size="lg" />
         <Text fontSize="xl" d={{ base: 'none', xl: 'block' }}>
           @miyagawa
         </Text>
@@ -43,7 +43,7 @@ export const Drawer = ((props: BoxProps) => {
 
         {links.map(link => (
           <DrawerItem
-            key={link.href}
+            key={link.key}
             href={link.href}
             icon={link.icon}
             selected={path === link.href}
@@ -58,6 +58,7 @@ export const Drawer = ((props: BoxProps) => {
         >
           <Image
             src="https://bit.ly/dan-abramov"
+            alt="ProjectImage"
             borderRadius="xl"
             objectFit="cover"
           />

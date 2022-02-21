@@ -47,6 +47,7 @@ const Dashboard: NextPage = () => {
         <AspectRatio w={280} ratio={16 / 9}>
           <Image
             src={data?.image}
+            alt="ProjectImage"
             borderRadius="xl"
             objectFit="cover"
             border="solid 4px white"

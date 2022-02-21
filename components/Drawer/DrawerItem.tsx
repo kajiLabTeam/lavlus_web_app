@@ -4,6 +4,7 @@ import {
   Box,
   BoxProps,
   Icon,
+  Text,
   ChakraComponent,
   useBreakpointValue,
 } from '@chakra-ui/react';
@@ -50,7 +51,7 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
       {..._.omit(props, 'icon')}
     >
       <Icon as={props.icon} boxSize="1.5em" mx={4} />
-      {isXl && props.children}
+      <Text d={{ base: 'none', xl: 'block' }}>{props.children}</Text>
     </Box>
   );
 }) as DrawerItemComponent;
