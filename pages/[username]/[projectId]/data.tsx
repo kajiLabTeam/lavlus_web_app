@@ -20,7 +20,7 @@ import {
   Container,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { Header, Drawer } from '../../components';
+import { Header, Drawer } from '../../../components';
 
 export const getServerSideProps: GetServerSideProps = async context => ({
   props: {
@@ -49,7 +49,7 @@ const Dashboard: NextPage = () => {
       </Box>
 
       <Box mt="-300px" color="black">
-        aaafegrhtnyjmfuki,lo.
+        data
       </Box>
     </Box>
   );

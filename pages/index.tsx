@@ -1,15 +1,15 @@
-import type {NextPage} from 'next';
+import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 
-import {useSession, signIn, signOut} from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
-import {Button, ButtonGroup} from '@chakra-ui/react';
+import { Button, ButtonGroup } from '@chakra-ui/react';
 
 const Landing: NextPage = () => {
-  const {data: session} = useSession();
-  console.log(session);
+  const { data: session } = useSession();
+  // console.log(session);
 
   return (
     <div className={styles.container}>
@@ -19,7 +19,7 @@ const Landing: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div style={{margin: 'auto', top: 100, position: 'absolute'}}>
+      <div style={{ margin: 'auto', top: 100, position: 'absolute' }}>
         {!session && (
           <>
             Not signed in <br />
@@ -40,7 +40,8 @@ const Landing: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing <code className={styles.code}>pages/index.tsx</code>
+          Get started by editing{' '}
+          <code className={styles.code}>pages/index.tsx</code>
         </p>
 
         <div className={styles.grid}>
@@ -67,7 +68,9 @@ const Landing: NextPage = () => {
             className={styles.card}
           >
             <h2>Deploy &rarr;</h2>
-            <p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
+            <p>
+              Instantly deploy your Next.js site to a public URL with Vercel.
+            </p>
           </a>
         </div>
       </main>

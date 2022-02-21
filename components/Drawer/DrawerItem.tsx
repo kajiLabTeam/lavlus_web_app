@@ -4,12 +4,9 @@ import {
   Box,
   BoxProps,
   Icon,
-  IconProps,
-  Spacer,
   ChakraComponent,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import { IconType } from 'react-icons';
 import _ from 'lodash';
 
 type DrawerItemComponent = ChakraComponent<'div', {}>;
@@ -25,7 +22,7 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
 ) => {
   const router = useRouter();
   const { username, projectId } = router.query;
-  const [selected, setSelected] = React.useState(props.selected);
+  // const [selected, setSelected] = React.useState(props.selected);
   const isXl = useBreakpointValue({ base: false, xl: true });
   return (
     <Box
@@ -36,19 +33,19 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
       justifyContent={{ base: 'center', xl: 'flex-start' }}
       alignItems="center"
       borderLeft={
-        selected ? '5px solid #4FD1C5' : '5px solid rgba(255,255,255,0)'
+        props.selected ? '5px solid #4FD1C5' : '5px solid rgba(255,255,255,0)'
       }
-      color={selected ? 'white' : 'gray.400'}
+      color={props.selected ? 'white' : 'gray.400'}
       fontSize="lg"
-      fontWeight={selected ? 'bold' : 'normal'}
+      fontWeight={props.selected ? 'bold' : 'normal'}
       _hover={{
         bg: 'rgba(255, 255, 255, 0.25)',
         borderLeft: '5px solid #4FD1C5',
       }}
       transition="background-color 0.5s"
       onClick={() => {
-        setSelected(!selected);
-        router.replace(`/${username}/${projectId}`);
+        // setSelected(!selected);
+        router.replace(`/${username}/${projectId}/${props.href}`);
       }}
       {..._.omit(props, 'icon')}
     >

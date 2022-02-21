@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { DashboardLayout } from '../components';
 import 'yakuhanjp/dist/css/yakuhanjp_s.css';
+import { ReactNode } from 'react';
 
 const theme = extendTheme({
   fonts: {
@@ -12,26 +13,17 @@ const theme = extendTheme({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  switch (pageProps.layout) {
-    case 'dashboard': {
-      return (
-        <SessionProvider session={pageProps.session}>
-          <ChakraProvider theme={theme}>
-            <DashboardLayout>
-              <Component {...pageProps} />
-            </DashboardLayout>
-          </ChakraProvider>
-        </SessionProvider>
-      );
-    }
-    default: {
-      return (
-        <SessionProvider session={pageProps.session}>
-          <ChakraProvider theme={theme}>
+  return (
+    <SessionProvider session={pageProps.session}>
+      <ChakraProvider theme={theme}>
+        {pageProps.layout === 'dashboard' ? (
+          <DashboardLayout>
             <Component {...pageProps} />
-          </ChakraProvider>
-        </SessionProvider>
-      );
-    }
-  }
+          </DashboardLayout>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </ChakraProvider>
+    </SessionProvider>
+  );
 }
