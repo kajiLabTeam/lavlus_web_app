@@ -1,11 +1,7 @@
-import { useRouter } from 'next/router';
-// components
 import { Box, Container, BoxProps, ChakraComponent } from '@chakra-ui/react';
 import { Header } from '..';
 
 export const StandardLayout = ((props: BoxProps) => {
-  const router = useRouter();
-  const { username, projectId } = router.query;
   return (
     <Box
       bg="blue.800"

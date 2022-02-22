@@ -8,7 +8,6 @@ import {
   Divider,
   Image,
   AspectRatio,
-  useBreakpointValue,
   BoxProps,
   ChakraComponent,
 } from '@chakra-ui/react';
@@ -16,17 +15,31 @@ import { AiFillHome, AiFillDatabase, AiFillDashboard } from 'react-icons/ai';
 import { LavlusIcon } from '../../common/icons';
 import { DrawerItem } from './DrawerItem';
 
-const links = [
-  { key: 'bdfwtgh', label: 'Home', href: '', icon: AiFillHome },
-  { key: 'frgetgn', label: 'Home3', href: 'home3', icon: AiFillDashboard },
-  { key: 'vbnjnmk', label: 'Data', href: 'data', icon: AiFillDatabase },
-];
-
 export const Drawer = ((props: BoxProps) => {
   const router = useRouter();
-  const paths = router.pathname.split('/');
-  const path = paths[3] === undefined ? '' : paths[3];
-  const isXl = useBreakpointValue({ base: false, xl: true });
+  const { username, projectId } = router.query;
+  const projectPath = `/${username}/${projectId}`;
+
+  const links = React.useMemo(
+    () => [
+      {
+        label: 'Home',
+        href: `${projectPath}`,
+        icon: AiFillHome,
+      },
+      {
+        label: 'Home3',
+        href: `${projectPath}/sensors`,
+        icon: AiFillDashboard,
+      },
+      {
+        label: 'Data',
+        href: `${projectPath}/data`,
+        icon: AiFillDatabase,
+      },
+    ],
+    [projectPath],
+  );
 
   return (
     <Box {...props}>
@@ -43,10 +56,10 @@ export const Drawer = ((props: BoxProps) => {
 
         {links.map(link => (
           <DrawerItem
-            key={link.key}
+            key={link.href}
             href={link.href}
             icon={link.icon}
-            selected={path === link.href}
+            selected={router.asPath === link.href}
           >
             {link.label}
           </DrawerItem>

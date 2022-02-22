@@ -16,79 +16,70 @@ import {
   Center,
   Divider,
 } from '@chakra-ui/react';
-import { useSession, signOut } from 'next-auth/react';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../utils';
+import { User, Project } from '../../types';
 
-interface User {
-  id: string;
-  username: string;
-  [prop: string]: any;
-}
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../recoil/atoms';
 
-interface Project {
-  id: string;
-  name: string;
-  overview: string;
-  startDate: Date;
-  endDate: Date;
-  image: string;
-  updatedAt: string;
-  createdAt: string;
-  ownerId: string;
-}
+import { Auth } from '../../common';
 
 const ProjectList: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
-  const { data: session } = useSession();
-  const { data: userData } = useSWR<User>(
-    ['/users/me', session?.accessToken],
-    fetchWithToken,
-  );
+  const auth = useRecoilValue(authState);
   const { data: projects } = useSWR<Project[]>(
-    ['/users/me/projects', session?.accessToken],
+    ['/users/me/projects', auth.token],
     fetchWithToken,
   );
+
   return (
-    <Grid templateRows="40px auto" templateColumns="320px 1fr" gap={12} px={12}>
-      <GridItem colSpan={2}>
-        <Heading>{username}のProject一覧</Heading>
-      </GridItem>
+    <Auth>
+      <Grid
+        templateRows="40px auto"
+        templateColumns="320px 1fr"
+        gap={12}
+        px={12}
+      >
+        <GridItem colSpan={2}>
+          <Heading>{username}のProject一覧</Heading>
+        </GridItem>
 
-      <GridItem>
-        <Center>
-          <OwnerInfo />
-        </Center>
-      </GridItem>
+        <GridItem>
+          <Center>
+            <OwnerInfo />
+          </Center>
+        </GridItem>
 
-      <Stack spacing={6}>
-        <Flex justify="end">
-          <Button w={100} colorScheme="teal">
-            + New
-          </Button>
-        </Flex>
+        <Stack spacing={6}>
+          <Flex justify="end">
+            <Button w={100} colorScheme="teal">
+              + New
+            </Button>
+          </Flex>
 
-        <Divider />
-        {projects?.map(project => (
-          <ProjectCard project={project} key={project.id} />
-        ))}
+          <Divider />
+          {projects?.map(project => (
+            <ProjectCard project={project} key={project.id} />
+          ))}
 
-        <Grid
-          h="200px"
-          bg="gray.400"
-          borderRadius="xl"
-          p={4}
-          onClick={() => router.push('/user/aaa')}
-        >
-          <Text>だみー</Text>
-        </Grid>
-      </Stack>
+          <Grid
+            h="200px"
+            bg="gray.400"
+            borderRadius="xl"
+            p={4}
+            onClick={() => router.push('/user/aaa')}
+          >
+            <Text>だみー</Text>
+          </Grid>
+        </Stack>
 
-      {/* <Text>{username}</Text> */}
-      {/* <pre>{JSON.stringify(userData, null, 2)}</pre>
+        {/* <Text>{username}</Text> */}
+        {/* <pre>{JSON.stringify(userData, null, 2)}</pre>
       <pre>{JSON.stringify(projects, null, 2)}</pre> */}
-    </Grid>
+      </Grid>
+    </Auth>
   );
 };
 
@@ -127,5 +118,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     </Grid>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async context => ({
+  props: {
+    layout: 'standard',
+  },
+});
 
 export default ProjectList;

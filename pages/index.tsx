@@ -1,15 +1,20 @@
+import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-
-import { useSession, signIn, signOut } from 'next-auth/react';
-
+import { useRouter } from 'next/router';
+// import { useSession, signIn, signOut } from 'next-auth/react';
 import { Button, ButtonGroup } from '@chakra-ui/react';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { authState } from '../recoil/atoms';
+// import useSWR from 'swr';
+// import { fetchWithToken } from '../utils';
 
 const Landing: NextPage = () => {
-  const { data: session } = useSession();
-  // console.log(session);
+  const router = useRouter();
+  const auth = useRecoilValue(authState);
+  const signOut = useResetRecoilState(authState);
 
   return (
     <div className={styles.container}>
@@ -25,18 +30,21 @@ const Landing: NextPage = () => {
           top: 100,
           position: 'absolute',
         }}
+        suppressHydrationWarning
       >
-        {!session && (
+        {!auth.isSignedIn ? (
           <>
-            Not signed in <br />
-            <Button onClick={() => signIn()} style={{ color: '#334364' }}>
+            <p>Not signed in</p>
+            <Button
+              onClick={() => router.push('/login')}
+              style={{ color: '#334364' }}
+            >
               Sign in
             </Button>
           </>
-        )}
-        {session && (
+        ) : (
           <>
-            Signed in as {session.user.email} <br />
+            <p>Signed in as {auth.email}</p>
             <Button onClick={() => signOut()} style={{ color: '#334364' }}>
               Sign out
             </Button>

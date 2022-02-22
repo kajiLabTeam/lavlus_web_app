@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-// components
 import {
   Box,
   Grid,
@@ -11,8 +9,6 @@ import {
 import { Header, Drawer, Notification } from '..';
 
 export const DashboardLayout = ((props: BoxProps) => {
-  const router = useRouter();
-  const { username, projectId } = router.query;
   return (
     <Box
       bg="blue.800"

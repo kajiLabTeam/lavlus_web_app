@@ -1,7 +1,6 @@
 import React from 'react';
 import NextLink from 'next/link';
-import { Box, HStack, Flex, Text, Link } from '@chakra-ui/react';
-// import { HamburgerIcon } from "@chakra-ui/icons";
+import { HStack, Flex, Text, Link } from '@chakra-ui/react';
 
 const links = [
   { key: 'home01', label: 'Home', href: '/home' },

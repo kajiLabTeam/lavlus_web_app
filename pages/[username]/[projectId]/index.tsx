@@ -1,27 +1,18 @@
 import React from 'react';
 import type { NextPage, GetServerSideProps } from 'next';
-// components
 import { Box, Image, AspectRatio, Heading } from '@chakra-ui/react';
 import { useSession, signOut } from 'next-auth/react';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../../utils';
+import { Project } from '../../../types';
 
-interface Project {
-  id: string;
-  name: string;
-  overview: string;
-  startDate: Date;
-  endDate: Date;
-  image: string;
-  updatedAt: string;
-  createdAt: string;
-  ownerId: string;
-}
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../../recoil/atoms';
 
 const Dashboard: NextPage = () => {
-  const { data: session } = useSession();
+  const auth = useRecoilValue(authState);
   const { data, error } = useSWR<Project>(
-    ['/projects/j_Q3j0lJ9z', session?.accessToken],
+    ['/projects/j_Q3j0lJ9z', auth.token],
     fetchWithToken,
   );
 

@@ -1,4 +1,3 @@
-// This is an example of how to read a JSON Web Token from an API route
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { LavlusApi } from '../../../utils';

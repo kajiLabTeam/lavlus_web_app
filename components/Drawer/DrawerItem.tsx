@@ -1,14 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  BoxProps,
-  Icon,
-  Text,
-  ChakraComponent,
-  useBreakpointValue,
-} from '@chakra-ui/react';
-import _ from 'lodash';
+import { Box, BoxProps, Icon, Text, ChakraComponent } from '@chakra-ui/react';
 
 type DrawerItemComponent = ChakraComponent<'div', {}>;
 
@@ -22,9 +14,6 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
   props: DrawerItemProps,
 ) => {
   const router = useRouter();
-  const { username, projectId } = router.query;
-  // const [selected, setSelected] = React.useState(props.selected);
-  const isXl = useBreakpointValue({ base: false, xl: true });
   return (
     <Box
       as="button"
@@ -45,10 +34,8 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
       }}
       transition="background-color 0.5s"
       onClick={() => {
-        // setSelected(!selected);
-        router.replace(`/${username}/${projectId}/${props.href}`);
+        router.replace(props.href);
       }}
-      {..._.omit(props, 'icon')}
     >
       <Icon as={props.icon} boxSize="1.5em" mx={4} />
       <Text d={{ base: 'none', xl: 'block' }}>{props.children}</Text>

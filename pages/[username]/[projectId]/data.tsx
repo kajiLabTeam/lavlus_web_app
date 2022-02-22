@@ -1,36 +1,7 @@
 import type { NextPage, GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-// components
-import {
-  Box,
-  HStack,
-  Flex,
-  Text,
-  Link,
-  Grid,
-  VStack,
-  GridItem,
-  Avatar,
-  Divider,
-  Button,
-  Spacer,
-  Image,
-  AspectRatio,
-  Img,
-  Container,
-} from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
-import { Header, Drawer } from '../../../components';
-
-export const getServerSideProps: GetServerSideProps = async context => ({
-  props: {
-    layout: 'dashboard',
-  },
-});
+import { Box } from '@chakra-ui/react';
 
 const Dashboard: NextPage = () => {
-  const router = useRouter();
-  const { username, projectId } = router.query;
   return (
     <Box h="2000%" bg="gray.200" borderRadius="3xl">
       <Box w="100%" h="300px" borderRadius="3xl" overflow="hidden">
@@ -54,5 +25,11 @@ const Dashboard: NextPage = () => {
     </Box>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async context => ({
+  props: {
+    layout: 'dashboard',
+  },
+});
 
 export default Dashboard;

@@ -1,4 +1,3 @@
-// components
 import {
   Box,
   Text,
