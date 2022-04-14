@@ -19,7 +19,7 @@ export const Header = () => {
       wrap="wrap"
       px={6}
       py={2}
-      bg="rgba(255, 255, 255, 15%)"
+      bg="blue.800"
       color="white"
       position="fixed"
       zIndex="tooltip"

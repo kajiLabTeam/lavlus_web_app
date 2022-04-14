@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import type { NextPage, GetServerSideProps } from 'next';
-// components
 import {
   Box,
   Text,
@@ -23,8 +22,6 @@ import { User, Project } from '../../types';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../recoil/atoms';
 
-import { Auth } from '../../common';
-
 const ProjectList: NextPage = () => {
   const router = useRouter();
   const { username } = router.query;
@@ -35,51 +32,44 @@ const ProjectList: NextPage = () => {
   );
 
   return (
-    <Auth>
-      <Grid
-        templateRows="40px auto"
-        templateColumns="320px 1fr"
-        gap={12}
-        px={12}
-      >
-        <GridItem colSpan={2}>
-          <Heading>{username}のProject一覧</Heading>
-        </GridItem>
+    <Grid templateRows="40px auto" templateColumns="320px 1fr" gap={12} px={12}>
+      <GridItem colSpan={2}>
+        <Heading>{username}のProject一覧</Heading>
+      </GridItem>
 
-        <GridItem>
-          <Center>
-            <OwnerInfo />
-          </Center>
-        </GridItem>
+      <GridItem>
+        <Center>
+          <OwnerInfo />
+        </Center>
+      </GridItem>
 
-        <Stack spacing={6}>
-          <Flex justify="end">
-            <Button w={100} colorScheme="teal">
-              + New
-            </Button>
-          </Flex>
+      <Stack spacing={6}>
+        <Flex justify="end">
+          <Button w={100} colorScheme="teal">
+            + New
+          </Button>
+        </Flex>
 
-          <Divider />
-          {projects?.map(project => (
-            <ProjectCard project={project} key={project.id} />
-          ))}
+        <Divider />
+        {projects?.map(project => (
+          <ProjectCard project={project} key={project.id} />
+        ))}
 
-          <Grid
-            h="200px"
-            bg="gray.400"
-            borderRadius="xl"
-            p={4}
-            onClick={() => router.push('/user/aaa')}
-          >
-            <Text>だみー</Text>
-          </Grid>
-        </Stack>
+        <Grid
+          h="200px"
+          bg="gray.400"
+          borderRadius="xl"
+          p={4}
+          onClick={() => router.push('/user/aaa')}
+        >
+          <Text>だみー</Text>
+        </Grid>
+      </Stack>
 
-        {/* <Text>{username}</Text> */}
-        {/* <pre>{JSON.stringify(userData, null, 2)}</pre>
+      {/* <Text>{username}</Text> */}
+      {/* <pre>{JSON.stringify(userData, null, 2)}</pre>
       <pre>{JSON.stringify(projects, null, 2)}</pre> */}
-      </Grid>
-    </Auth>
+    </Grid>
   );
 };
 
@@ -122,6 +112,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 export const getServerSideProps: GetServerSideProps = async context => ({
   props: {
     layout: 'standard',
+    authenticated: true,
   },
 });
 

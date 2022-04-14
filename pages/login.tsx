@@ -36,9 +36,6 @@ const Login: NextPage = () => {
     email: Yup.string().email().required(),
     password: Yup.string().required(),
   });
-
-  console.log(auth);
-
   return (
     <Center bg="blue.800" minW="container.sm" minH="100vh" color="white">
       <Box mx={24} bg="gray.400" borderRadius="3xl" overflow="hidden">
@@ -78,7 +75,7 @@ const Login: NextPage = () => {
                       label="Password"
                       inputProps={{ type: 'password' }}
                     />
-                    <PercentComplete />
+                    <PercentComplete progressProps={{ hasStripe: false }} />
                     {flag && (
                       <Text color="red.500">
                         EmailかPasswordが正しくありません

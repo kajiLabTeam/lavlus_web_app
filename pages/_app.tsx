@@ -2,6 +2,7 @@
 import type { AppProps } from 'next/app';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { DashboardLayout, StandardLayout } from '../components/layouts';
+import { Auth } from '../common';
 import { RecoilRoot } from 'recoil';
 import 'yakuhanjp/dist/css/yakuhanjp_s.css';
 
@@ -17,17 +18,19 @@ export default function App({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <RecoilRoot>
         {/* <SessionProvider session={pageProps.session}> */}
-        {pageProps.layout === 'dashboard' ? (
-          <DashboardLayout>
+        <Auth authenticated={!!pageProps.authenticated}>
+          {pageProps.layout === 'dashboard' ? (
+            <DashboardLayout>
+              <Component {...pageProps} />
+            </DashboardLayout>
+          ) : pageProps.layout === 'standard' ? (
+            <StandardLayout>
+              <Component {...pageProps} />
+            </StandardLayout>
+          ) : (
             <Component {...pageProps} />
-          </DashboardLayout>
-        ) : pageProps.layout === 'standard' ? (
-          <StandardLayout>
-            <Component {...pageProps} />
-          </StandardLayout>
-        ) : (
-          <Component {...pageProps} />
-        )}
+          )}
+        </Auth>
         {/* </SessionProvider> */}
       </RecoilRoot>
     </ChakraProvider>

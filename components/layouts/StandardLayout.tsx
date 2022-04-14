@@ -3,18 +3,12 @@ import { Header } from '..';
 
 export const StandardLayout = ((props: BoxProps) => {
   return (
-    <Box
-      bg="blue.800"
-      minW="container.sm"
-      minH="100vh"
-      color="white"
-      {...props}
-    >
+    <Box minW="container.sm" minH="100vh" {...props}>
       <Header />
-      {/* 最大幅を設定 */}
-      <Container as="main" maxW="1440px" pt={24}>
+      {/* ヘッダの分のマージンを取る */}
+      <Box as="main" pt="52px">
         {props.children}
-      </Container>
+      </Box>
     </Box>
   );
 }) as ChakraComponent<'div', {}>;

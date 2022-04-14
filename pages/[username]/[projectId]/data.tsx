@@ -29,6 +29,7 @@ const Dashboard: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async context => ({
   props: {
     layout: 'dashboard',
+    authenticated: true,
   },
 });
 
