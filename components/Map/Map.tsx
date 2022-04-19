@@ -11,9 +11,18 @@ const ChakraMapContainer = chakra(MapContainer, {
   },
 });
 
-const Map = () => {
+interface MapProps {
+  edit?: boolean;
+  onChange: (e: any) => void;
+}
+
+const Map = (props: MapProps) => {
   const position = [35.1822679, 137.1113604];
   const zoomLv = 16;
+
+  const handleChange = (geoJson: any) => {
+    console.log(geoJson);
+  };
 
   return (
     <ChakraMapContainer center={position} zoom={zoomLv} scrollWheelZoom={false}>
@@ -22,7 +31,7 @@ const Map = () => {
         // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         // maxZoom={20}
       />
-      <Geoman />
+      <Geoman onChange={props.onChange} />
     </ChakraMapContainer>
   );
 };

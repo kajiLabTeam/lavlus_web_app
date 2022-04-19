@@ -31,6 +31,9 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
+import { SimpleDatePicker } from '../common';
+import * as turf from '@turf/turf';
+
 import { Map } from '../components/Map';
 
 import dynamic from 'next/dynamic';
@@ -98,23 +101,25 @@ const New: NextPage = () => {
                   はじめましょう!
                 </Heading>
                 <InputControl
-                  name="email"
+                  name="Title"
                   inputProps={{
                     variant: 'filled',
                     size: 'lg',
-                    placeholder: 'email',
+                    placeholder: 'Title',
                   }}
                 />
                 <Box h="80px"></Box>
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
                   有効期限
                 </Heading>
-                <InputControl name="email" inputProps={{ variant: 'filled' }} />
+                <Flex>
+                  <SimpleDatePicker />
+                  <SimpleDatePicker />
+                </Flex>
                 <Box h="80px"></Box>
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
-                  有効期限
+                  概要
                 </Heading>
-                <InputControl name="email" inputProps={{ variant: 'filled' }} />
                 {/* CSS Reset */}
                 <Box
                   bg="gray.100"
@@ -147,7 +152,7 @@ const New: NextPage = () => {
                   GeoJSON
                 </Heading>
                 <Box w="100%" h="600px">
-                  <Map />
+                  <Map onChange={(e: any) => console.log(turf.center(e))} />
                 </Box>
               </Stack>
             )}

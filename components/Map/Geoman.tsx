@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { useLeafletContext } from '@react-leaflet/core';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
-const Geoman = () => {
+interface MapProps {
+  edit?: boolean;
+  onChange: (e: any) => void;
+}
+
+const Geoman = (props: MapProps) => {
   const context = useLeafletContext();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const leafletContainer = context.layerContainer || context.map;
 
     leafletContainer.pm.addControls({
@@ -18,13 +23,17 @@ const Geoman = () => {
     leafletContainer.on('pm:create', (e: any) => {
       if (e.layer && e.layer.pm) {
         const shape = e;
-        console.log(e);
+        // console.log(e);
 
         // enable editing of circle
         shape.layer.pm.enable();
 
-        console.log(`object created: ${shape.layer.pm.getShape()}`);
+        // console.log(`object created: ${shape.layer.pm.getShape()}`);
+
         // console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
+
+        props.onChange(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
+
         leafletContainer.pm
           .getGeomanLayers(true)
           .bindPopup('i am whole')
