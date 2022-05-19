@@ -2,9 +2,9 @@ import React from 'react';
 import { ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../recoil/atoms';
+import { authState } from '../../recoil/atoms';
 
-export const Auth = ({
+const Auth = ({
   children,
   authenticated,
 }: {
@@ -24,11 +24,15 @@ export const Auth = ({
   //何もなければ次へ（そのまま処理）
   return (
     <>
-      {!isAuthChecking && !authenticated
-        ? children
-        : auth.isSignedIn
-        ? children
-        : null}
+      {!isAuthChecking && !authenticated ? (
+        children
+      ) : auth.isSignedIn ? (
+        children
+      ) : (
+        <div />
+      )}
     </>
   );
 };
+
+export default Auth;

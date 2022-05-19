@@ -12,26 +12,27 @@ const ChakraMapContainer = chakra(MapContainer, {
 });
 
 interface MapProps {
-  edit?: boolean;
-  onChange: (e: any) => void;
+  // edit?: boolean;
+  onChange?: (geo: string) => void;
 }
 
-const Map = (props: MapProps) => {
+const Map = ({ onChange }: MapProps) => {
   const position = [35.1822679, 137.1113604];
   const zoomLv = 16;
 
-  const handleChange = (geoJson: any) => {
-    console.log(geoJson);
+  const handleChange = (geo: string) => {
+    onChange && onChange(geo);
   };
 
   return (
+    // @ts-ignore
     <ChakraMapContainer center={position} zoom={zoomLv} scrollWheelZoom={false}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         // maxZoom={20}
       />
-      <Geoman onChange={props.onChange} />
+      <Geoman onChange={handleChange} />
     </ChakraMapContainer>
   );
 };

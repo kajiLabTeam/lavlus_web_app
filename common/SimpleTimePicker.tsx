@@ -15,11 +15,11 @@ const ChakraDatePicker = chakra(DatePicker, {
   },
 });
 
-export interface ChakraDatePickerProps {
+interface ChakraDatePickerProps {
   onChange?: (value: string) => void;
 }
 
-export const SimpleDatePicker = ({ onChange }: ChakraDatePickerProps) => {
+export const SimpleTimePicker = ({ onChange }: ChakraDatePickerProps) => {
   const [date, setDate] = React.useState(new Date());
   const handleChange = (date: Date) => {
     setDate(date);
@@ -29,7 +29,11 @@ export const SimpleDatePicker = ({ onChange }: ChakraDatePickerProps) => {
     <ChakraDatePicker
       selected={date}
       onChange={handleChange}
-      dateFormat="yyyy-MM-dd"
+      showTimeSelect
+      showTimeSelectOnly
+      timeIntervals={15}
+      dateFormat="h:mm aa"
+      timeCaption="Time"
     />
   );
 };

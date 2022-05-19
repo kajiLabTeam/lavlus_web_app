@@ -3,19 +3,23 @@ import type { NextPage, GetServerSideProps } from 'next';
 import {
   Text,
   Box,
+  Select,
+  Switch,
+  HStack,
+  Input,
   Image,
   Heading,
   Stack,
   Grid,
   GridItem,
   ButtonGroup,
+  Button,
   Center,
   useBoolean,
   Container,
   Flex,
   CSSReset,
 } from '@chakra-ui/react';
-import Editor, { theme } from 'rich-markdown-editor';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { authState } from '../recoil/atoms';
@@ -28,25 +32,18 @@ import {
   SubmitButton,
   FormControl,
 } from 'formik-chakra-ui';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { SimpleDatePicker } from '../common';
+import { PeriodOfTimeInput } from '../components';
+import { SimpleDatePicker, CustomEditor, SensorInput } from '../common';
 import * as turf from '@turf/turf';
 
 import { Map } from '../components/Map';
-
-import dynamic from 'next/dynamic';
-// const Map = dynamic(() => import('../components/Map'), { ssr: false });
+import { date } from 'yup/lib/locale';
 
 const sample = `
-# Heading 1
-
-## Heading 2
-
-### Heading 3
-
-#### Heading 4
+# (´・ω・｀)
 `;
 
 const New: NextPage = () => {
@@ -58,15 +55,6 @@ const New: NextPage = () => {
     email: Yup.string().email().required(),
     password: Yup.string().required(),
   });
-
-  // const Map = React.useMemo(
-  //   () =>
-  //     dynamic(() => import('../components/Map/Map'), {
-  //       loading: () => <p>A map is loading</p>,
-  //       ssr: false,
-  //     }),
-  //   [],
-  // );
 
   return (
     <Grid templateRows="auto" templateColumns="180px 1fr">
@@ -95,64 +83,67 @@ const New: NextPage = () => {
               }
             }}
           >
-            {({ handleSubmit, values }) => (
+            {({ handleSubmit, setFieldValue, values }) => (
               <Stack as="form" onSubmit={handleSubmit as any} spacing={6}>
+                <Button onClick={() => console.log(values)} />
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
                   はじめましょう!
                 </Heading>
+
                 <InputControl
-                  name="Title"
+                  name="name"
                   inputProps={{
                     variant: 'filled',
                     size: 'lg',
-                    placeholder: 'Title',
+                    placeholder: 'タイトル',
                   }}
                 />
+
                 <Box h="80px"></Box>
+
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
                   有効期限
                 </Heading>
+
                 <Flex>
-                  <SimpleDatePicker />
-                  <SimpleDatePicker />
+                  <SimpleDatePicker
+                    onChange={date => setFieldValue('startDate', date)}
+                  />
+                  <SimpleDatePicker
+                    onChange={date => setFieldValue('endDate', date)}
+                  />
                 </Flex>
+
                 <Box h="80px"></Box>
+
+                <SensorInput
+                  name="加速度センサ"
+                  onChange={(event: any) => console.log(event)}
+                />
+
+                <PeriodOfTimeInput />
+
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
                   概要
                 </Heading>
+
                 {/* CSS Reset */}
-                <Box
-                  bg="gray.100"
-                  borderRadius={8}
-                  padding={8}
-                  sx={{
-                    '& h1': {
-                      fontSize: '2rem',
-                    },
-                    '& h2': {
-                      fontSize: '1.5rem',
-                    },
-                    '& h3': {
-                      fontSize: '1.17rem',
-                    },
-                    '& h4': {
-                      fontSize: '1rem',
-                    },
-                  }}
-                >
-                  <Editor
-                    defaultValue={sample}
-                    theme={{
-                      ...theme,
-                      background: '#EDF2F7',
-                    }}
-                  />
-                </Box>
+                <CustomEditor
+                  // defaultValue={sample}
+                  onChange={value => setFieldValue('overview', value())}
+                />
+
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
                   GeoJSON
                 </Heading>
+
                 <Box w="100%" h="600px">
-                  <Map onChange={(e: any) => console.log(turf.center(e))} />
+                  <Map
+                    onChange={(value: any) => {
+                      setFieldValue('geo', value);
+                      setFieldValue('location', turf.center(value));
+                    }}
+                  />
                 </Box>
               </Stack>
             )}

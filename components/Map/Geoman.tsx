@@ -3,12 +3,12 @@ import { useLeafletContext } from '@react-leaflet/core';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
-interface MapProps {
-  edit?: boolean;
-  onChange: (e: any) => void;
+interface GeomanProps {
+  // edit?: boolean;
+  onChange?: (geo: string) => void;
 }
 
-const Geoman = (props: MapProps) => {
+const Geoman = ({ onChange }: GeomanProps) => {
   const context = useLeafletContext();
 
   React.useEffect(() => {
@@ -32,7 +32,8 @@ const Geoman = (props: MapProps) => {
 
         // console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
 
-        props.onChange(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
+        onChange &&
+          onChange(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
 
         leafletContainer.pm
           .getGeomanLayers(true)
@@ -51,7 +52,7 @@ const Geoman = (props: MapProps) => {
     });
 
     leafletContainer.on('pm:remove', (e: any) => {
-      console.log('object removed');
+      // console.log('object removed');
       // console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
     });
 
