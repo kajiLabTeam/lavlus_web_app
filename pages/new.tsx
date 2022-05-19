@@ -47,9 +47,9 @@ const sample = `
 `;
 
 const New: NextPage = () => {
-  const router = useRouter();
-  const [auth, setAuth] = useRecoilState(authState);
-  const [flag, setFlag] = useBoolean(false);
+  // const router = useRouter();
+  // const [auth, setAuth] = useRecoilState(authState);
+  // const [flag, setFlag] = useBoolean(false);
   const initialValues = { email: '', password: '' };
   const validationSchema = Yup.object({
     email: Yup.string().email().required(),
@@ -75,12 +75,12 @@ const New: NextPage = () => {
             validationSchema={validationSchema}
             onSubmit={async (values, actions) => {
               const data = await LavlusApi.login(values.email, values.password);
-              if (data) {
-                setAuth({ ...data, isSignedIn: true });
-                router.push('/user');
-              } else {
-                setFlag.on();
-              }
+              // if (data) {
+              //   setAuth({ ...data, isSignedIn: true });
+              //   router.push('/user');
+              // } else {
+              //   setFlag.on();
+              // }
             }}
           >
             {({ handleSubmit, setFieldValue, values }) => (
@@ -129,7 +129,7 @@ const New: NextPage = () => {
 
                 {/* CSS Reset */}
                 <CustomEditor
-                  // defaultValue={sample}
+                  defaultValue={sample}
                   onChange={value => setFieldValue('overview', value())}
                 />
 

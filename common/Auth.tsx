@@ -1,10 +1,10 @@
-import React from 'react';
-import { ReactNode } from 'react';
-import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
-import { authState } from '../../recoil/atoms';
+import React from "react";
+import { ReactNode } from "react";
+import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
+import { authState } from "../recoil/atoms";
 
-const Auth = ({
+export const Auth = ({
   children,
   authenticated,
 }: {
@@ -18,7 +18,7 @@ const Auth = ({
   const isAuthChecking = auth === undefined;
 
   React.useEffect(() => {
-    if (authenticated && !auth.isSignedIn) router.replace('/login');
+    if (authenticated && !auth.isSignedIn) router.replace("/login");
   }, [auth]);
 
   //何もなければ次へ（そのまま処理）
@@ -34,5 +34,3 @@ const Auth = ({
     </>
   );
 };
-
-export default Auth;

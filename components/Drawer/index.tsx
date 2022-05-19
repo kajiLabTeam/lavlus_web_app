@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React from "react";
+import { useRouter } from "next/router";
 import {
   Box,
   Text,
@@ -10,10 +10,10 @@ import {
   AspectRatio,
   BoxProps,
   ChakraComponent,
-} from '@chakra-ui/react';
-import { AiFillHome, AiFillDatabase, AiFillDashboard } from 'react-icons/ai';
-import { LavlusIcon } from '../../common/icons';
-import { DrawerItem } from './DrawerItem';
+} from "@chakra-ui/react";
+import { AiFillHome, AiFillDatabase, AiFillDashboard } from "react-icons/ai";
+import { LavlusIcon } from "../../common/icons";
+import { DrawerItem } from "./DrawerItem";
 
 export const Drawer = ((props: BoxProps) => {
   const router = useRouter();
@@ -23,38 +23,42 @@ export const Drawer = ((props: BoxProps) => {
   const links = React.useMemo(
     () => [
       {
-        label: 'Home',
+        label: "Home",
         href: `${projectPath}`,
         icon: AiFillHome,
       },
       {
-        label: 'Home3',
+        label: "Home3",
         href: `${projectPath}/sensors`,
         icon: AiFillDashboard,
       },
       {
-        label: 'Data',
+        label: "Data",
         href: `${projectPath}/data`,
         icon: AiFillDatabase,
       },
     ],
-    [projectPath],
+    [projectPath]
   );
 
   return (
     <Box {...props}>
       <VStack spacing={6}>
         <Avatar size="lg" />
-        <Text fontSize="xl" d={{ base: 'none', xl: 'block' }}>
+        <Text fontSize="xl" display={{ base: "none", xl: "block" }}>
           @miyagawa
         </Text>
-        <Text fontSize="xs" color="gray.400" d={{ base: 'none', xl: 'block' }}>
+        <Text
+          fontSize="xs"
+          color="gray.400"
+          display={{ base: "none", xl: "block" }}
+        >
           Miyagawa Nobuhito
         </Text>
 
         <Divider my={10} />
 
-        {links.map(link => (
+        {links.map((link) => (
           <DrawerItem
             key={link.href}
             href={link.href}
@@ -66,7 +70,7 @@ export const Drawer = ((props: BoxProps) => {
         ))}
 
         <AspectRatio
-          w={{ base: '48px', xl: '100%' }}
+          w={{ base: "48px", xl: "100%" }}
           ratio={{ base: 1 / 1, xl: 16 / 9 }}
         >
           <Image
@@ -78,13 +82,21 @@ export const Drawer = ((props: BoxProps) => {
         </AspectRatio>
 
         <LavlusIcon boxSize="48px" />
-        <Text fontSize="xl" fontWeight="bold" d={{ base: 'none', xl: 'block' }}>
+        <Text
+          fontSize="xl"
+          fontWeight="bold"
+          display={{ base: "none", xl: "block" }}
+        >
           lavlus
         </Text>
-        <Text fontSize="sm" color="gray.400" d={{ base: 'none', xl: 'block' }}>
+        <Text
+          fontSize="sm"
+          color="gray.400"
+          display={{ base: "none", xl: "block" }}
+        >
           Powered by kaji-lab
         </Text>
       </VStack>
     </Box>
   );
-}) as ChakraComponent<'div', {}>;
+}) as ChakraComponent<"div", {}>;

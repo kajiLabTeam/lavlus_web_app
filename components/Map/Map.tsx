@@ -1,13 +1,13 @@
-import { chakra } from '@chakra-ui/react';
-import { MapContainer, TileLayer } from 'react-leaflet';
-import Geoman from './Geoman';
+import { chakra } from "@chakra-ui/react";
+import { MapContainer, TileLayer } from "react-leaflet";
+import Geoman from "./Geoman";
 
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 
 const ChakraMapContainer = chakra(MapContainer, {
   baseStyle: {
-    h: 'full',
-    w: 'full',
+    h: "full",
+    w: "full",
   },
 });
 

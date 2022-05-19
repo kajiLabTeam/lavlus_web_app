@@ -1,21 +1,11 @@
-import React from 'react';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
-import styles from '../styles/Home.module.css';
-import { useRouter } from 'next/router';
-// import { useSession, signIn, signOut } from 'next-auth/react';
-import { Button, ButtonGroup } from '@chakra-ui/react';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { authState } from '../recoil/atoms';
-// import useSWR from 'swr';
-// import { fetchWithToken } from '../utils';
+import React from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import { LoginCheck } from "../components/LoginCheck";
 
 const Landing: NextPage = () => {
-  const router = useRouter();
-  const auth = useRecoilValue(authState);
-  const signOut = useResetRecoilState(authState);
-
   return (
     <div className={styles.container}>
       <Head>
@@ -24,33 +14,7 @@ const Landing: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div
-        style={{
-          margin: 'auto',
-          top: 100,
-          position: 'absolute',
-        }}
-        suppressHydrationWarning
-      >
-        {!auth.isSignedIn ? (
-          <>
-            <p>Not signed in</p>
-            <Button
-              onClick={() => router.push('/login')}
-              style={{ color: '#334364' }}
-            >
-              Sign in
-            </Button>
-          </>
-        ) : (
-          <>
-            <p>Signed in as {auth.email}</p>
-            <Button onClick={() => signOut()} style={{ color: '#334364' }}>
-              Sign out
-            </Button>
-          </>
-        )}
-      </div>
+      <LoginCheck />
 
       <main className={styles.main}>
         <h1 className={styles.title}>
@@ -58,8 +22,8 @@ const Landing: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code} style={{ color: '#334364' }}>
+          Get started by editing{" "}
+          <code className={styles.code} style={{ color: "#334364" }}>
             pages/index.tsx
           </code>
         </p>
@@ -101,7 +65,7 @@ const Landing: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>

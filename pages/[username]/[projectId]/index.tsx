@@ -1,19 +1,18 @@
-import React from 'react';
-import type { NextPage, GetServerSideProps } from 'next';
-import { Box, Image, AspectRatio, Heading } from '@chakra-ui/react';
-import { useSession, signOut } from 'next-auth/react';
-import useSWR from 'swr';
-import { fetchWithToken } from '../../../utils';
-import { Project } from '../../../types';
+import React from "react";
+import type { NextPage, GetServerSideProps } from "next";
+import { Box, Image, AspectRatio, Heading } from "@chakra-ui/react";
+import useSWR from "swr";
+import { fetchWithToken } from "../../../utils";
+import { Project } from "../../../types";
 
-import { useRecoilValue } from 'recoil';
-import { authState } from '../../../recoil/atoms';
+import { useRecoilValue } from "recoil";
+import { authState } from "../../../recoil/atoms";
 
 const Dashboard: NextPage = () => {
   const auth = useRecoilValue(authState);
   const { data, error } = useSWR<Project>(
-    ['/projects/j_Q3j0lJ9z', auth.token],
-    fetchWithToken,
+    ["/projects/j_Q3j0lJ9z", auth.token],
+    fetchWithToken
   );
 
   return (
@@ -61,9 +60,9 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async context => ({
+export const getServerSideProps: GetServerSideProps = async (context) => ({
   props: {
-    layout: 'dashboard',
+    layout: "dashboard",
     authenticated: true,
   },
 });

@@ -12,7 +12,7 @@ const links = [
 export const Header = () => {
   return (
     <Flex
-      as="nav"
+      // as="nav"
       align="center"
       justify="space-between"
       w="100%"

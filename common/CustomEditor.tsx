@@ -1,7 +1,7 @@
-import React from 'react';
-import { chakra, Box } from '@chakra-ui/react';
-import 'react-datepicker/dist/react-datepicker.css';
-import Editor, { theme } from 'rich-markdown-editor';
+import React from "react";
+import { chakra, Box } from "@chakra-ui/react";
+import "react-datepicker/dist/react-datepicker.css";
+// import Editor, { theme } from 'rich-markdown-editor';
 
 const sample = `
 # Heading 1
@@ -30,28 +30,28 @@ export const CustomEditor = ({ defaultValue, onChange }: CustomEditorProps) => {
       py={4}
       px={8}
       sx={{
-        '& h1': {
-          fontSize: '2rem',
+        "& h1": {
+          fontSize: "2rem",
         },
-        '& h2': {
-          fontSize: '1.5rem',
+        "& h2": {
+          fontSize: "1.5rem",
         },
-        '& h3': {
-          fontSize: '1.17rem',
+        "& h3": {
+          fontSize: "1.17rem",
         },
-        '& h4': {
-          fontSize: '1rem',
+        "& h4": {
+          fontSize: "1rem",
         },
       }}
     >
-      <Editor
+      {/* <Editor
         defaultValue={defaultValue ?? sample}
         theme={{
           ...theme,
           background: '#EDF2F7',
         }}
         onChange={handleChange}
-      />
+      /> */}
     </Box>
   );
 };

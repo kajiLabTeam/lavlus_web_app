@@ -1,8 +1,8 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import { Box, BoxProps, Icon, Text, ChakraComponent } from '@chakra-ui/react';
+import React from "react";
+import { useRouter } from "next/router";
+import { Box, BoxProps, Icon, Text, ChakraComponent } from "@chakra-ui/react";
 
-type DrawerItemComponent = ChakraComponent<'div', {}>;
+type DrawerItemComponent = ChakraComponent<"div", {}>;
 
 interface DrawerItemProps extends BoxProps {
   selected: boolean;
@@ -11,7 +11,7 @@ interface DrawerItemProps extends BoxProps {
 }
 
 export const DrawerItem: React.FC<DrawerItemProps> = ((
-  props: DrawerItemProps,
+  props: DrawerItemProps
 ) => {
   const router = useRouter();
   return (
@@ -19,18 +19,18 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
       as="button"
       w="100%"
       h={12}
-      d="flex"
-      justifyContent={{ base: 'center', xl: 'flex-start' }}
+      display="flex"
+      justifyContent={{ base: "center", xl: "flex-start" }}
       alignItems="center"
       borderLeft={
-        props.selected ? '5px solid #4FD1C5' : '5px solid rgba(255,255,255,0)'
+        props.selected ? "5px solid #4FD1C5" : "5px solid rgba(255,255,255,0)"
       }
-      color={props.selected ? 'white' : 'gray.400'}
+      color={props.selected ? "white" : "gray.400"}
       fontSize="lg"
-      fontWeight={props.selected ? 'bold' : 'normal'}
+      fontWeight={props.selected ? "bold" : "normal"}
       _hover={{
-        bg: 'rgba(255, 255, 255, 0.25)',
-        borderLeft: '5px solid #4FD1C5',
+        bg: "rgba(255, 255, 255, 0.25)",
+        borderLeft: "5px solid #4FD1C5",
       }}
       transition="background-color 0.5s"
       onClick={() => {
@@ -38,7 +38,7 @@ export const DrawerItem: React.FC<DrawerItemProps> = ((
       }}
     >
       <Icon as={props.icon} boxSize="1.5em" mx={4} />
-      <Text d={{ base: 'none', xl: 'block' }}>{props.children}</Text>
+      <Text display={{ base: "none", xl: "block" }}>{props.children}</Text>
     </Box>
   );
 }) as DrawerItemComponent;

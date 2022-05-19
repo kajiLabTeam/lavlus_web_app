@@ -5,8 +5,8 @@ import {
   Container,
   BoxProps,
   ChakraComponent,
-} from '@chakra-ui/react';
-import { Header, Drawer, Notification } from '..';
+} from "@chakra-ui/react";
+import { Header, Drawer, Notification } from "..";
 
 export const DashboardLayout = ((props: BoxProps) => {
   return (
@@ -27,8 +27,8 @@ export const DashboardLayout = ((props: BoxProps) => {
           px={6}
           gap={6}
           templateColumns={{
-            base: '60px 1fr',
-            xl: '140px 1fr 180px',
+            base: "60px 1fr",
+            xl: "140px 1fr 180px",
           }}
           templateRows="auto"
         >
@@ -36,11 +36,11 @@ export const DashboardLayout = ((props: BoxProps) => {
             <Drawer position="sticky" top={24} />
           </GridItem>
           <GridItem as="section">{props.children}</GridItem>
-          <GridItem as="aside" d={{ base: 'none', xl: 'block' }}>
+          <GridItem as="aside" display={{ base: "none", xl: "block" }}>
             <Notification position="sticky" top={24} />
           </GridItem>
         </Grid>
       </Container>
     </Box>
   );
-}) as ChakraComponent<'div', {}>;
+}) as ChakraComponent<"div", {}>;
