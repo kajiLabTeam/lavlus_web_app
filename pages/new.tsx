@@ -1,5 +1,5 @@
-import React from 'react';
-import type { NextPage, GetServerSideProps } from 'next';
+import React from "react";
+import type { NextPage, GetServerSideProps } from "next";
 import {
   Text,
   Box,
@@ -19,11 +19,11 @@ import {
   Container,
   Flex,
   CSSReset,
-} from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { authState } from '../recoil/atoms';
-import { LavlusApi } from '../utils';
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { authState } from "../recoil/atoms";
+import { LavlusApi } from "../utils";
 
 import {
   InputControl,
@@ -31,16 +31,16 @@ import {
   ResetButton,
   SubmitButton,
   FormControl,
-} from 'formik-chakra-ui';
-import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
+} from "formik-chakra-ui";
+import { Formik, Field } from "formik";
+import * as Yup from "yup";
 
-import { PeriodOfTimeInput } from '../components';
-import { SimpleDatePicker, CustomEditor, SensorInput } from '../common';
-import * as turf from '@turf/turf';
+import { PeriodOfTimeInput } from "../components";
+import { SimpleDatePicker, CustomEditor, SensorInput } from "../common";
+import * as turf from "@turf/turf";
 
-import { Map } from '../components/Map';
-import { date } from 'yup/lib/locale';
+import { Map } from "../components/Map";
+import { date } from "yup/lib/locale";
 
 const sample = `
 # (´・ω・｀)
@@ -50,7 +50,7 @@ const New: NextPage = () => {
   // const router = useRouter();
   // const [auth, setAuth] = useRecoilState(authState);
   // const [flag, setFlag] = useBoolean(false);
-  const initialValues = { email: '', password: '' };
+  const initialValues = { email: "", password: "" };
   const validationSchema = Yup.object({
     email: Yup.string().email().required(),
     password: Yup.string().required(),
@@ -93,9 +93,9 @@ const New: NextPage = () => {
                 <InputControl
                   name="name"
                   inputProps={{
-                    variant: 'filled',
-                    size: 'lg',
-                    placeholder: 'タイトル',
+                    variant: "filled",
+                    size: "lg",
+                    placeholder: "タイトル",
                   }}
                 />
 
@@ -107,10 +107,10 @@ const New: NextPage = () => {
 
                 <Flex>
                   <SimpleDatePicker
-                    onChange={date => setFieldValue('startDate', date)}
+                    onChange={(date) => setFieldValue("startDate", date)}
                   />
                   <SimpleDatePicker
-                    onChange={date => setFieldValue('endDate', date)}
+                    onChange={(date) => setFieldValue("endDate", date)}
                   />
                 </Flex>
 
@@ -130,7 +130,7 @@ const New: NextPage = () => {
                 {/* CSS Reset */}
                 <CustomEditor
                   defaultValue={sample}
-                  onChange={value => setFieldValue('overview', value())}
+                  onChange={(value) => setFieldValue("overview", value())}
                 />
 
                 <Heading as="h3" borderLeft="12px solid #ED8936" pl={2}>
@@ -140,8 +140,8 @@ const New: NextPage = () => {
                 <Box w="100%" h="600px">
                   <Map
                     onChange={(value: any) => {
-                      setFieldValue('geo', value);
-                      setFieldValue('location', turf.center(value));
+                      setFieldValue("geo", value);
+                      setFieldValue("location", turf.center(value));
                     }}
                   />
                 </Box>
@@ -154,9 +154,9 @@ const New: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async context => ({
+export const getServerSideProps: GetServerSideProps = async (context) => ({
   props: {
-    layout: 'standard',
+    layout: "standard",
     authenticated: true,
   },
 });

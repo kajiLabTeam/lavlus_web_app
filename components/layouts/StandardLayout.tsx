@@ -1,5 +1,5 @@
-import { Box, Container, BoxProps, ChakraComponent } from '@chakra-ui/react';
-import { Header } from '..';
+import { Box, Container, BoxProps, ChakraComponent } from "@chakra-ui/react";
+import { Header } from "..";
 
 export const StandardLayout = ((props: BoxProps) => {
   return (
@@ -11,4 +11,4 @@ export const StandardLayout = ((props: BoxProps) => {
       </Box>
     </Box>
   );
-}) as ChakraComponent<'div', {}>;
+}) as ChakraComponent<"div", {}>;

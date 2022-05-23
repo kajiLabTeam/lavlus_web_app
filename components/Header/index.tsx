@@ -1,18 +1,17 @@
-import React from 'react';
-import NextLink from 'next/link';
-import { HStack, Flex, Text, Link } from '@chakra-ui/react';
+import React from "react";
+import NextLink from "next/link";
+import { HStack, Flex, Text, Link } from "@chakra-ui/react";
 
 const links = [
-  { key: 'home01', label: 'Home', href: '/home' },
-  { key: 'home02', label: 'Home', href: '/home' },
-  { key: 'home03', label: 'Home', href: '/home' },
-  { key: 'home04', label: 'Home', href: '/home' },
+  { key: "home01", label: "Home", href: "/home" },
+  { key: "home02", label: "Home", href: "/home" },
+  { key: "home03", label: "Home", href: "/home" },
+  { key: "home04", label: "Home", href: "/home" },
 ];
 
 export const Header = () => {
   return (
     <Flex
-      // as="nav"
       align="center"
       justify="space-between"
       w="100%"
@@ -31,7 +30,7 @@ export const Header = () => {
         lavlus
       </Text>
       <HStack>
-        {links.map(link => (
+        {links.map((link) => (
           <NextLink href={link.href} passHref key={link.key}>
             <Link>{link.label}</Link>
           </NextLink>
