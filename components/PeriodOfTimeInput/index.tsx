@@ -1,81 +1,81 @@
-import React from 'react';
-import {
-  Text,
-  Box,
-  Switch,
-  Input,
-  Grid,
-  GridItem,
-  useBoolean,
-  Stack,
-  HStack,
-  Select,
-} from '@chakra-ui/react';
-import { SimpleTimePicker } from '../../common';
-import { ButtonCheckbox } from './ButtonCheckbox';
+import React from "react";
+import { IconButton, Grid } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import { Badge } from "../../common";
+import { PeriodOfTimeSingleInput } from "./PeriodOfTimeSingleInput";
+import { FieldArray, useFormikContext } from "formik";
+import { NewProjectValues, PeriodOfTime } from "../../types";
+import _ from "lodash";
 
-const entities = [
-  { value: 'day', label: '日' },
-  { value: 'week', label: '週間' },
-];
-
-const dayOfWeeks = [
-  { value: 'sun', label: '日' },
-  { value: 'mon', label: '月' },
-  { value: 'tue', label: '火' },
-  { value: 'wed', label: '水' },
-  { value: 'thu', label: '木' },
-  { value: 'fri', label: '金' },
-  { value: 'sat', label: '土' },
-];
-
-export const PeriodOfTimeInput = () => {
-  return (
-    <>
-      <Stack
-        bg="gray.100"
-        w="500px"
-        borderRadius="20px"
-        p="25px"
-        alignItems="center"
-        spacing={8}
-      >
-        <HStack w="200px">
-          <Input
-            size="lg"
-            variant="flushed"
-            type="number"
-            value={1}
-            textAlign="center"
-          />
-          <Select variant="flushed">
-            <option value="option1">日</option>
-            <option value="option2">週</option>
-          </Select>
-        </HStack>
-
-        <HStack spacing={4}>
-          {dayOfWeeks.map(item => (
-            <ButtonCheckbox key={item.value} label={item.label} />
-          ))}
-        </HStack>
-
-        <SimpleTimePicker />
-      </Stack>
-    </>
-  );
+const defaultValue: PeriodOfTime = {
+  interval: {
+    length: 1,
+    entity: "week",
+    dayOfWeek: ["mon", "wed", "fri"],
+  },
+  period: {
+    from: "10:00:00",
+    to: "12:00:00",
+  },
 };
 
-const inputCore = () => {
+export const PeriodOfTimeInput = () => {
+  const { values, setFieldValue } = useFormikContext<NewProjectValues>();
+
+  const {
+    spatiotemporalSetting: { periods },
+  } = values;
+
+  const formValues = periods.map((item) => ({ ...item, key: Math.random() }));
+
+  // 変更
+  const handleChange = (value: PeriodOfTime, index: number) => {
+    formValues[index] = { ...value, key: formValues[index].key };
+    setFieldValue(
+      `spatiotemporalSetting.periods`,
+      formValues.map((item) => _.omit(item, ["key"]))
+    );
+  };
+
+  // 削除
+  const handleDeleteChange = (key: number) => {
+    const deletedData = formValues.filter((item) => item.key !== key);
+    setFieldValue(
+      `spatiotemporalSetting.periods`,
+      deletedData.map((item) => _.omit(item, ["key"]))
+    );
+  };
+
   return (
-    <Box bg="gray.100" w="600px" h="300px" borderRadius="20px" p="25px">
-      <HStack>
-        <Input size="lg" variant="flushed" type="number" />
-        <Select variant="flushed">
-          <option value="option1">日</option>
-          <option value="option2">週</option>
-        </Select>
-      </HStack>
-    </Box>
+    <FieldArray
+      name="spatiotemporalSetting.periods"
+      render={(arrayHelpers) => (
+        <Grid gap={4}>
+          {formValues.map((period, index) => (
+            <Badge
+              key={period.key}
+              colorScheme="red"
+              bg="red.400"
+              icon={RiDeleteBin6Fill}
+              onClick={() => handleDeleteChange(period.key)}
+            >
+              <PeriodOfTimeSingleInput
+                value={_.omit(period, ["key"])}
+                onChange={(value) => handleChange(value, index)}
+              />
+            </Badge>
+          ))}
+          <IconButton
+            m="auto"
+            size="md"
+            colorScheme="blue"
+            icon={<AddIcon />}
+            aria-label="Add"
+            onClick={() => arrayHelpers.push({ ...defaultValue })}
+          />
+        </Grid>
+      )}
+    />
   );
 };

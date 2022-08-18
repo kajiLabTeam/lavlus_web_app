@@ -15,11 +15,15 @@ const ChakraDatePicker = chakra(DatePicker, {
 });
 
 interface ChakraDatePickerProps {
+  value?: Date;
   onChange?: (value: string) => void;
 }
 
-export const SimpleTimePicker = ({ onChange }: ChakraDatePickerProps) => {
-  const [date, setDate] = React.useState(new Date());
+export const SimpleTimePicker = ({
+  value,
+  onChange,
+}: ChakraDatePickerProps) => {
+  const [date, setDate] = React.useState(value ?? new Date());
   const handleChange = (date: Date) => {
     setDate(date);
     onChange && onChange(dateFormat(date, "isoDateTime"));

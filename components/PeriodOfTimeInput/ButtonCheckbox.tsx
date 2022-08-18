@@ -1,32 +1,29 @@
-import React from 'react';
-import {
-  Text,
-  Box,
-  Switch,
-  Input,
-  Grid,
-  GridItem,
-  useBoolean,
-  HStack,
-  Select,
-  Button,
-  ButtonProps,
-} from '@chakra-ui/react';
-import { RepeatIcon } from '@chakra-ui/icons';
+import React from "react";
+import { Button } from "@chakra-ui/react";
 
-interface ButtonCheckboxProps extends ButtonProps {
+interface ButtonCheckboxProps {
   label: string;
+  value?: boolean;
+  onChange?: (value: boolean) => void;
 }
 
-export const ButtonCheckbox = ({ label }: ButtonCheckboxProps) => {
-  const [checked, setChecked] = React.useState(false);
+export const ButtonCheckbox = ({
+  label,
+  value,
+  onChange,
+}: ButtonCheckboxProps) => {
+  const [checked, setChecked] = React.useState(value);
+  const handleChange = () => {
+    onChange && onChange(!checked);
+    setChecked(!checked);
+  };
   return (
     <Button
       w="50px"
       h="50px"
-      colorScheme={checked ? 'blue' : 'blackAlpha'}
+      colorScheme={checked ? "blue" : "blackAlpha"}
       borderRadius="50%"
-      onClick={() => setChecked(!checked)}
+      onClick={handleChange}
     >
       {label}
     </Button>

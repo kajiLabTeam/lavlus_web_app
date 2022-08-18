@@ -1,6 +1,6 @@
-import { atom } from 'recoil';
-import { User } from '../../types';
-import { recoilPersist } from 'recoil-persist';
+import { atom } from "recoil";
+import { User } from "../../types";
+import { recoilPersist } from "recoil-persist";
 
 const { persistAtom } = recoilPersist();
 
@@ -10,10 +10,10 @@ export interface AuthInfo extends User {
 }
 
 export const authState = atom<AuthInfo>({
-  key: 'authState',
+  key: "authState",
   default: {
     isSignedIn: false,
-    token: '',
+    token: "",
   },
   effects_UNSTABLE: [persistAtom],
 });

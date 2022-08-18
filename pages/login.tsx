@@ -1,5 +1,5 @@
-import React from 'react';
-import type { NextPage } from 'next';
+import React from "react";
+import type { NextPage } from "next";
 import {
   Text,
   Box,
@@ -11,11 +11,11 @@ import {
   ButtonGroup,
   Center,
   useBoolean,
-} from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { authState } from '../recoil/atoms';
-import { LavlusApi } from '../utils';
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { authState } from "../recoil/atoms";
+import { LavlusApi } from "../utils";
 
 import {
   InputControl,
@@ -23,15 +23,15 @@ import {
   ResetButton,
   SubmitButton,
   FormControl,
-} from 'formik-chakra-ui';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+} from "formik-chakra-ui";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 const Login: NextPage = () => {
   const router = useRouter();
   const [auth, setAuth] = useRecoilState(authState);
   const [flag, setFlag] = useBoolean(false);
-  const initialValues = { email: '', password: '' };
+  const initialValues = { email: "", password: "" };
   const validationSchema = Yup.object({
     email: Yup.string().email().required(),
     password: Yup.string().required(),
@@ -55,13 +55,13 @@ const Login: NextPage = () => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values, actions) => {
-                  const data = await LavlusApi.login(
-                    values.email,
-                    values.password,
-                  );
+                  const data = await LavlusApi.login({
+                    email: values.email,
+                    password: values.password,
+                  });
                   if (data) {
                     setAuth({ ...data, isSignedIn: true });
-                    router.push('/user');
+                    router.push(`/${data.username}`);
                   } else {
                     setFlag.on();
                   }
@@ -73,7 +73,7 @@ const Login: NextPage = () => {
                     <InputControl
                       name="password"
                       label="Password"
-                      inputProps={{ type: 'password' }}
+                      inputProps={{ type: "password" }}
                     />
                     <PercentComplete progressProps={{ hasStripe: false }} />
                     {flag && (

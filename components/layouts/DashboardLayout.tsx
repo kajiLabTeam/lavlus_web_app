@@ -10,13 +10,7 @@ import { Header, Drawer, Notification } from "..";
 
 export const DashboardLayout = ((props: BoxProps) => {
   return (
-    <Box
-      bg="blue.800"
-      minW="container.sm"
-      minH="100vh"
-      color="white"
-      {...props}
-    >
+    <Box bg="blue.800" w="100vw" minH="100vh" color="white" {...props}>
       <Header />
       {/* 最大幅を設定 */}
       <Container as="main" maxW="1440px" p={0} centerContent>

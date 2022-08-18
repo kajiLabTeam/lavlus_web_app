@@ -1,7 +1,8 @@
 import React from "react";
-import { chakra, Box } from "@chakra-ui/react";
-import "react-datepicker/dist/react-datepicker.css";
-// import Editor, { theme } from 'rich-markdown-editor';
+import { chakra, Box, Grid, GridItem, Textarea } from "@chakra-ui/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 
 const sample = `
 # Heading 1
@@ -15,43 +16,37 @@ const sample = `
 
 export interface CustomEditorProps {
   defaultValue?: string;
-  onChange?: (value: () => string) => void;
+  onChange?: (value: string) => void;
 }
 
 export const CustomEditor = ({ defaultValue, onChange }: CustomEditorProps) => {
-  const handleChange = (value: () => string) => {
-    onChange && onChange(value);
+  const [value, setValue] = React.useState(defaultValue ?? sample);
+
+  const handleChange = (event: any) => {
+    onChange && onChange(event.target.value);
+    setValue(event.target.value);
   };
 
   return (
-    <Box
-      bg="gray.100"
-      borderRadius={8}
-      py={4}
-      px={8}
-      sx={{
-        "& h1": {
-          fontSize: "2rem",
-        },
-        "& h2": {
-          fontSize: "1.5rem",
-        },
-        "& h3": {
-          fontSize: "1.17rem",
-        },
-        "& h4": {
-          fontSize: "1rem",
-        },
-      }}
-    >
-      {/* <Editor
-        defaultValue={defaultValue ?? sample}
-        theme={{
-          ...theme,
-          background: '#EDF2F7',
-        }}
-        onChange={handleChange}
-      /> */}
+    <Box bg="gray.100" borderRadius={8} p={4}>
+      <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+        <GridItem>
+          <Textarea
+            h="100%"
+            bg="gray.50"
+            onChange={handleChange}
+            value={value}
+          />
+        </GridItem>
+        <GridItem>
+          <ReactMarkdown
+            components={ChakraUIRenderer()}
+            children={value}
+            remarkPlugins={[remarkGfm]}
+            skipHtml
+          />
+        </GridItem>
+      </Grid>
     </Box>
   );
 };

@@ -7,27 +7,43 @@ import {
   Grid,
   GridItem,
   useBoolean,
+  Icon,
 } from "@chakra-ui/react";
-import { RepeatIcon } from "@chakra-ui/icons";
+import { IconType } from "react-icons";
+import { BsSpeedometer2 } from "react-icons/bs";
+import { Sensor } from "../../types";
 
-export interface SensorInputProps {
-  name?: string;
-  onChange?: (value: number) => void;
+export interface SensorSingleInputProps {
+  value: Sensor;
+  presets: number[];
+  label?: string;
+  icon?: IconType;
+  onChange?: (value: Sensor) => void;
 }
 
-export const SensorInput = ({ name, onChange }: SensorInputProps) => {
-  const [flag, setFlag] = useBoolean(false);
-  const [value, setValue] = React.useState(-1);
+export const SensorSingleInput = ({
+  value,
+  presets,
+  label,
+  icon,
+  onChange,
+}: SensorSingleInputProps) => {
+  const [flag, setFlag] = useBoolean(value.refreshRate > 0 ?? false);
+  const [refreshRate, setRefreshRate] = React.useState<number | string>(
+    value.refreshRate
+  );
 
   const inputHandleChange = (event: any) => {
-    const value = event.target.value;
-    if (flag) onChange && onChange(value);
-    setValue(value);
+    const newRefreshRate: number = Number(event.target.value);
+    if (flag) onChange && onChange({ ...value, refreshRate: newRefreshRate });
+    setRefreshRate(newRefreshRate);
   };
 
-  const switchHandleChange = (event: any) => {
-    if (flag) onChange && onChange(-1);
-    else onChange && onChange(value);
+  const switchHandleChange = () => {
+    if (flag) {
+      onChange && onChange({ ...value, refreshRate: 0 });
+      setRefreshRate("");
+    }
     setFlag.toggle();
   };
 
@@ -39,18 +55,19 @@ export const SensorInput = ({ name, onChange }: SensorInputProps) => {
         templateColumns="repeat(3, 1fr)"
         templateRows="repeat(3, 1fr)"
         gap={4}
-        filter={flag ? "" : "contrast(50%)"}
+        filter={flag ? "" : "contrast(75%)"}
+        opacity={flag ? "" : "75%"}
       >
         <GridItem colSpan={2}>
           <Text fontSize="xl" fontWeight="bold">
-            {name ?? "名もなきセンサ"}
+            {label ?? "名もなきセンサ"}
           </Text>
         </GridItem>
         <GridItem display="flex" justifyContent="flex-end">
           <Switch isChecked={flag} onChange={switchHandleChange} />
         </GridItem>
         <GridItem rowSpan={2} display="flex" alignItems="flex-end">
-          <RepeatIcon w="80px" h="80px" />
+          <Icon as={icon ?? BsSpeedometer2} w="80px" h="80px" />
         </GridItem>
         <GridItem colSpan={2} display="flex" alignItems="flex-end">
           <Text>リフレッシュレート</Text>
@@ -60,10 +77,11 @@ export const SensorInput = ({ name, onChange }: SensorInputProps) => {
             size="lg"
             variant="flushed"
             type="number"
-            placeholder="120"
+            placeholder={`${presets[1]}` ?? "120"}
             textAlign="center"
             fontSize="2xl"
             disabled={!flag}
+            value={refreshRate}
             onChange={inputHandleChange}
           />
           <Text fontSize="lg">Hz</Text>

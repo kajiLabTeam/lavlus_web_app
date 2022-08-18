@@ -26,9 +26,11 @@ export const Header = () => {
       backdropBlur="15px"
       backdropBrightness="115%"
     >
-      <Text fontSize="2xl" fontWeight="bold">
-        lavlus
-      </Text>
+      <NextLink href="/">
+        <Text fontSize="2xl" fontWeight="bold">
+          lavlus
+        </Text>
+      </NextLink>
       <HStack>
         {links.map((link) => (
           <NextLink href={link.href} passHref key={link.key}>

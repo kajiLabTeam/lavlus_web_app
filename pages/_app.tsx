@@ -3,6 +3,8 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { DashboardLayout, StandardLayout } from "../components/layouts";
 import { Auth } from "../components";
 import { RecoilRoot } from "recoil";
+import { SWRConfig } from "swr";
+import { fetcher } from "../utils";
 import "yakuhanjp/dist/css/yakuhanjp_s.css";
 
 const theme = extendTheme({
@@ -17,19 +19,21 @@ export default function App({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       {/* @ts-ignore */}
       <RecoilRoot>
-        <Auth authenticated={!!pageProps.authenticated}>
-          {pageProps.layout === "dashboard" ? (
-            <DashboardLayout>
+        <SWRConfig value={{ fetcher, refreshInterval: 3000 }}>
+          <Auth authenticated={!!pageProps.authenticated}>
+            {pageProps.layout === "dashboard" ? (
+              <DashboardLayout>
+                <Component {...pageProps} />
+              </DashboardLayout>
+            ) : pageProps.layout === "standard" ? (
+              <StandardLayout>
+                <Component {...pageProps} />
+              </StandardLayout>
+            ) : (
               <Component {...pageProps} />
-            </DashboardLayout>
-          ) : pageProps.layout === "standard" ? (
-            <StandardLayout>
-              <Component {...pageProps} />
-            </StandardLayout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </Auth>
+            )}
+          </Auth>
+        </SWRConfig>
       </RecoilRoot>
     </ChakraProvider>
   );
