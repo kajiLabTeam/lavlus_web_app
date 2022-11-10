@@ -4,11 +4,12 @@ import { User, NewProjectValues } from "../types";
 interface Auth extends User {
   token: string;
 }
+
 const SERVER_URL = "https://lavlus-api.ayaka.work";
 
-export const fetcher = async (url: string, token?: string) => {
+export const fetcher = async (path: string, token?: string) => {
   const config = token ? { headers: { Authorization: "Bearer " + token } } : {};
-  const { data } = await axios.get(SERVER_URL + url, config);
+  const { data } = await axios.get(SERVER_URL + path, config);
   return data;
 };
 
