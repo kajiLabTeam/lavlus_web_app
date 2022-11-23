@@ -2,8 +2,9 @@ import React from "react";
 import type { NextPage } from "next";
 import { Center, Heading, Stack } from "@chakra-ui/react";
 import { LavlusIcon } from "@/common/icons";
+import { NextPageWithLayoutAndPageExtraInfo } from "@/types";
 
-const Landing: NextPage = () => {
+const LandingPage: NextPageWithLayoutAndPageExtraInfo = () => {
   return (
     <Center w="100vw" h="100vh">
       <Stack align="center" gap={12}>
@@ -14,4 +15,6 @@ const Landing: NextPage = () => {
   );
 };
 
-export default Landing;
+LandingPage.needsAuthentication = true;
+
+export default LandingPage;

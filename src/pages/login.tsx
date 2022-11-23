@@ -1,97 +1,87 @@
 import React from "react";
 import type { NextPage } from "next";
 import {
-  Text,
-  Box,
-  Image,
-  Heading,
-  Stack,
-  Grid,
-  GridItem,
-  ButtonGroup,
+  Container,
   Center,
-  useBoolean,
+  Stack,
+  Button,
+  Text,
+  useDisclosure,
+  Link,
+  useToast,
+} from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
-import { authState } from "../recoil/atoms";
-import { LavlusApi } from "../utils";
 
-import {
-  InputControl,
-  PercentComplete,
-  ResetButton,
-  SubmitButton,
-  FormControl,
-} from "formik-chakra-ui";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import { NextPageWithLayoutAndPageExtraInfo } from "@/types";
 
-const Login: NextPage = () => {
-  const router = useRouter();
-  const [auth, setAuth] = useRecoilState(authState);
-  const [flag, setFlag] = useBoolean(false);
-  const initialValues = { email: "", password: "" };
-  const validationSchema = Yup.object({
-    email: Yup.string().email().required(),
-    password: Yup.string().required(),
-  });
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { firebaseAuth } from "@/utils";
+
+const Login: NextPageWithLayoutAndPageExtraInfo = () => {
+  const onSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(firebaseAuth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      console.log(credential);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const onSignOut = async () => {
+    try {
+      await signOut(firebaseAuth);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <Center bg="blue.800" minW="container.sm" minH="100vh" color="white">
-      <Box mx={24} bg="gray.400" borderRadius="3xl" overflow="hidden">
-        <Grid h="500px" templateColumns="repeat(2, 1fr)">
-          <GridItem>
-            <Image
-              w="100%"
-              h="100%"
-              objectFit="cover"
-              src="https://www.pakutaso.com/shared/img/thumb/PAK76_aoihikarito220150218182340_TP_V.jpg"
-            ></Image>
-          </GridItem>
-          <GridItem>
-            <Stack spacing={12} px={12}>
-              <Heading>Login</Heading>
-              <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={async (values, actions) => {
-                  const data = await LavlusApi.login({
-                    email: values.email,
-                    password: values.password,
-                  });
-                  if (data) {
-                    setAuth({ ...data, isSignedIn: true });
-                    router.push(`/${data.username}`);
-                  } else {
-                    setFlag.on();
-                  }
-                }}
-              >
-                {({ handleSubmit, values }) => (
-                  <Stack as="form" onSubmit={handleSubmit as any} spacing={6}>
-                    <InputControl name="email" label="Email" />
-                    <InputControl
-                      name="password"
-                      label="Password"
-                      inputProps={{ type: "password" }}
-                    />
-                    <PercentComplete progressProps={{ hasStripe: false }} />
-                    {flag && (
-                      <Text color="red.500">
-                        EmailかPasswordが正しくありません
-                      </Text>
-                    )}
-                    <ButtonGroup>
-                      <SubmitButton>ログイン</SubmitButton>
-                    </ButtonGroup>
-                  </Stack>
-                )}
-              </Formik>
-            </Stack>
-          </GridItem>
-        </Grid>
-      </Box>
-    </Center>
+    <>
+      <Container w="100vw" h="100vh">
+        <Center w="100%" h="100%">
+          <Stack gap={8}>
+            <Button onClick={onSignIn} colorScheme="green">
+              Google SignIn
+            </Button>
+            <Button onClick={onOpen} colorScheme="orange">
+              Show Auth
+            </Button>
+            <Button onClick={onSignOut} colorScheme="red">
+              Google SignOut
+            </Button>
+          </Stack>
+        </Center>
+      </Container>
+      <Modal
+        blockScrollOnMount={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        size="full"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>OAuth Token</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text as="pre" overflow="hidden">
+              {JSON.stringify(firebaseAuth.currentUser, null, 2)}
+            </Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

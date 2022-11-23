@@ -1,40 +1,42 @@
 import React from "react";
 import { ReactNode } from "react";
 import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../recoil/atoms";
+import { firebaseAuth } from "@/utils";
 
-const Auth = ({
-  children,
-  authenticated,
-}: {
+interface AuthProps {
   children: ReactNode;
-  authenticated: boolean;
-}) => {
+  needsAuthentication: boolean;
+}
+
+const Auth = ({ children, needsAuthentication }: AuthProps) => {
   const router = useRouter();
-  const auth = useRecoilValue(authState);
+  const [signInCheck, setSignInCheck] = React.useState<boolean>();
 
-  // ログインチェック中
-  const isAuthChecking = auth === undefined;
-
+  // サインイン状態のチェックを行う
   React.useEffect(() => {
-    if (authenticated && !auth.isSignedIn) router.replace("/login");
-  }, [auth]);
+    firebaseAuth.onAuthStateChanged((user) => {
+      // サインイン済み
+      if (user) setSignInCheck(true);
+      // サインインしていない状態
+      else setSignInCheck(false);
+    });
+  }, []);
 
-  //何もなければ次へ（そのまま処理）
-  return (
-    <>
-      {
-        // チェックが完了 & 認証しない
-        !isAuthChecking && !authenticated
-          ? children
-          : // チェックが完了 & 認証されている
-          !isAuthChecking && auth.isSignedIn
-          ? children
-          : null
-      }
-    </>
-  );
+  // 認証が必要でないページなら、内容をそのまま表示する
+  if (!needsAuthentication) return <>{children}</>;
+
+  // 認証のチェックが終了していなければ、表示しない
+  if (signInCheck === undefined) return null;
+
+  // 認証のチェックが終了したら、ページを遷移させる
+  if (signInCheck) {
+    // サインイン済み
+    return <>{children}</>;
+  } else {
+    // サインインしていない状態
+    router.replace("/login");
+    return null;
+  }
 };
 
 export default Auth;

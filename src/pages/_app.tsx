@@ -1,10 +1,10 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { RecoilRoot } from "recoil";
 import { SWRConfig } from "swr";
-import "yakuhanjp/dist/css/yakuhanjp_s.css";
 import { Auth } from "@/components";
 import { fetcher } from "@/utils";
-import { AppPropsWithLayout } from "@/types";
+import { AppPropsWithLayoutAndPageExtraInfo } from "@/types";
+import "yakuhanjp/dist/css/yakuhanjp_s.css";
 
 const theme = extendTheme({
   fonts: {
@@ -13,14 +13,16 @@ const theme = extendTheme({
   },
 });
 
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
+export default function App({
+  Component,
+  pageProps,
+}: AppPropsWithLayoutAndPageExtraInfo) {
   const getLayout = Component.getLayout ?? ((page) => page);
-
   return (
     <ChakraProvider theme={theme}>
       <RecoilRoot>
         <SWRConfig value={{ fetcher, refreshInterval: 3000 }}>
-          <Auth authenticated={!!pageProps.authenticated}>
+          <Auth needsAuthentication={!!Component.needsAuthentication}>
             {getLayout(<Component {...pageProps} />)}
           </Auth>
         </SWRConfig>
