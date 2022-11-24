@@ -1,5 +1,6 @@
 import React from "react";
 import NextImage from "next/image";
+import type { NextPage } from "next";
 import {
   Text,
   Box,
@@ -16,6 +17,7 @@ import { NewProjectValues } from "../types";
 import { LavlusApi } from "../utils";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
+import { authState } from "../recoil/atoms";
 // other
 import dateFormat from "dateformat";
 import { InputControl, SubmitButton, PercentComplete } from "formik-chakra-ui";
@@ -29,8 +31,6 @@ import Preferences from "../undraw/preferences.svg";
 import Booked from "../undraw/booked.svg";
 import Settings from "../undraw/settings.svg";
 import MapImage from "../undraw/map_image.svg";
-
-import { NextPageWithLayoutAndPageExtraInfo } from "@/types";
 
 const defaultOverview = `
 #### 以下はテンプレートです。
@@ -100,7 +100,7 @@ const validationSchema = yup.object({
   spatiotemporalSetting: yup.object().required(),
 });
 
-const New: NextPageWithLayoutAndPageExtraInfo = () => {
+const New: NextPage = () => {
   const router = useRouter();
   const auth = useRecoilValue(authState);
   return (
@@ -321,7 +321,5 @@ const CustomHeading: React.FC<CustomHeadingProps> = ({
     </Grid>
   );
 };
-
-New.needsAuthentication = true;
 
 export default New;
