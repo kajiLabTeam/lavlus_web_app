@@ -1,37 +1,7 @@
 export interface ModelBase {
   id?: string;
-  updatedAt?: Date;
-  createdAt?: Date;
-}
-
-export interface Project extends ModelBase {
-  name?: string;
-  overview?: string;
-  startDate?: Date;
-  endDate?: Date;
-  image?: string;
-  ownerId?: string;
-}
-
-export interface UserBase extends ModelBase {
-  username?: string;
-  email?: string;
-  image?: string;
-  roles?: string[];
-}
-
-export interface User extends UserBase {
-  userProfile?: UserProfile;
-}
-
-export interface UserProfile extends ModelBase {
-  realm?: string;
-  gender?: string;
-  birth?: Date;
-  belongTo?: string;
-  introduction?: string;
-  url?: string;
-  userId?: string;
+  updatedAt?: string | Date;
+  createdAt?: string | Date;
 }
 
 export interface Sensor {
@@ -39,49 +9,60 @@ export interface Sensor {
   refreshRate: number | string;
 }
 
-export interface SensorSetting {
-  isProvidedProfile: boolean;
-  sensors: Sensor[];
-}
-
-export interface Interval {
-  length: number;
-  entity: string;
-  dayOfWeek?: string[];
+export interface Spatiotemporal {
+  location: any;
+  area: any;
+  ble?: any; // 未実装
+  wifi?: any; // 未実装
+  periods: Period[];
 }
 
 export interface Period {
-  from: string;
-  to: string;
+  interval: 1;
+  entity: 'day' | 'week';
+  dayOfWeek: ('sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat')[];
+  startTime: string | Date;
+  endTime: string | Date;
 }
 
-export interface PeriodOfTime {
-  interval: Interval;
-  period: Period;
-}
-
-export interface SpatiotemporalSetting {
-  location: any;
-  area: any;
-  periods: PeriodOfTime[];
-}
-
-export interface NewProjectValues {
+export interface Project extends ModelBase {
   name: string;
   overview: string;
-  startDate: Date | string;
-  endDate: Date | string;
+  startDate: string | Date;
+  endDate: string | Date;
   image: string;
-  sensorSetting: SensorSetting;
-  spatiotemporalSetting: SpatiotemporalSetting;
+  sensors: Sensor[];
+  spatiotemporal: Spatiotemporal;
+  owner: string;
+  members: string[];
 }
 
-export interface SensingData {
-  id: string;
+export type NewProjectValues = Omit<
+  Project,
+  'id' | 'owner' | 'members' | 'createdAt' | 'updatedAt'
+>;
+
+export interface User extends Omit<ModelBase, 'id'> {
+  uid: string;
+  name: string;
+  email: string;
+  picture: string;
+  requesterInfo: RequesterInfo;
+  allowRequest: boolean;
+}
+
+export interface RequesterInfo extends Omit<ModelBase, 'id'> {
+  realm: string;
+  gender: 'male' | 'female' | 'other';
+  introduction: string;
+  organization: string;
+  url: string;
+  birthDate: string | Date;
+}
+
+export interface Sensing extends ModelBase {
   originalname: string;
-  size: 1340374;
-  updatedAt: Date | string;
-  createdAt: Date | string;
+  size: number;
   ownerId: string;
   projectId: string;
 }

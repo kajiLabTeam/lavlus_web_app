@@ -1,41 +1,31 @@
-import React from "react";
-import { chakra, Box, Grid, GridItem, Textarea } from "@chakra-ui/react";
+import React, { ComponentPropsWithoutRef } from "react";
+import { Box, Grid, GridItem, Textarea } from "@chakra-ui/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 
-const sample = `
-# Heading 1
-
-## Heading 2
-
-### Heading 3
-
-#### Heading 4
-`;
-
-export interface CustomEditorProps {
+export interface MarkdownEditorProps
+  extends ComponentPropsWithoutRef<"textarea"> {
   defaultValue?: string;
-  onChange?: (value: string) => void;
 }
 
-export const CustomEditor = ({ defaultValue, onChange }: CustomEditorProps) => {
-  const [value, setValue] = React.useState(defaultValue ?? sample);
-
-  const handleChange = (event: any) => {
-    onChange && onChange(event.target.value);
-    setValue(event.target.value);
-  };
+export const MarkdownEditor = React.forwardRef<
+  HTMLTextAreaElement,
+  MarkdownEditorProps
+>(({ defaultValue = "# h1", ...props }, ref) => {
+  const [value, setValue] = React.useState(defaultValue);
 
   return (
     <Box bg="gray.100" borderRadius={8} p={4}>
-      <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+      <Grid templateColumns="1fr 1fr" gap={4}>
         <GridItem>
           <Textarea
             h="100%"
             bg="gray.50"
-            onChange={handleChange}
             value={value}
+            ref={ref}
+            {...props}
+            onChange={(e) => setValue(e.target.value)}
           />
         </GridItem>
         <GridItem>
@@ -50,4 +40,4 @@ export const CustomEditor = ({ defaultValue, onChange }: CustomEditorProps) => {
       </Grid>
     </Box>
   );
-};
+});

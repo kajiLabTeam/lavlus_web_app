@@ -4,7 +4,7 @@ export * from "./Notification";
 export * from "./Auth";
 export * from "./Map";
 export * from "./SimpleDatePicker";
-export * from "./CustomEditor";
+export * from "./MarkdownEditor";
 export * from "./SensorInput";
 export * from "./SimpleTimePicker";
 export * from "./Badge";
