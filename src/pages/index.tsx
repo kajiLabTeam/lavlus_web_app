@@ -1,7 +1,7 @@
 import React from "react";
 import type { NextPage } from "next";
 import { Center, Heading, Stack } from "@chakra-ui/react";
-import { LavlusIcon } from "@/common/icons";
+import { LavlusIcon } from "@/components/icons";
 import { NextPageWithLayoutAndPageExtraInfo } from "@/types";
 
 const LandingPage: NextPageWithLayoutAndPageExtraInfo = () => {

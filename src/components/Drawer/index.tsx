@@ -12,7 +12,7 @@ import {
   ChakraComponent,
 } from "@chakra-ui/react";
 import { AiFillHome, AiFillDatabase, AiFillDashboard } from "react-icons/ai";
-import { LavlusIcon } from "../../common/icons";
+import { LavlusIcon } from "../icons";
 import { DrawerItem } from "./DrawerItem";
 
 export const Drawer = ((props: BoxProps) => {
