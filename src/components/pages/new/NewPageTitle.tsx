@@ -18,7 +18,7 @@ export const NewPageTitle = () => {
           </Stack>
         </Text>
       </Stack>
-      <Image src="/undraw/coding.svg" />
+      <Image src="/undraw/coding.svg" alt="coding" />
     </Grid>
   );
 };

@@ -41,10 +41,11 @@ export const CustomEditor = ({ defaultValue, onChange }: CustomEditorProps) => {
         <GridItem>
           <ReactMarkdown
             components={ChakraUIRenderer()}
-            children={value}
             remarkPlugins={[remarkGfm]}
             skipHtml
-          />
+          >
+            {value}
+          </ReactMarkdown>
         </GridItem>
       </Grid>
     </Box>

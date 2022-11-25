@@ -15,7 +15,7 @@ interface FormSectionProps {
   name: string;
   label: string;
   explanation: string;
-  image: any;
+  image: string;
   children: React.ReactNode;
 }
 
@@ -56,7 +56,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
         </GridItem>
         <GridItem area="image">
           <Flex h="100%" alignItems="flex-end">
-            <Image w="100%" src={image} />
+            <Image w="100%" src={image} alt={image} />
           </Flex>
         </GridItem>
         <GridItem area="form">{children}</GridItem>
