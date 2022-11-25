@@ -1,5 +1,5 @@
 import { Box, Container, BoxProps, ChakraComponent } from "@chakra-ui/react";
-import { Header } from "..";
+import { Header } from "../components";
 
 export const StandardLayout = ((props: BoxProps) => {
   return (

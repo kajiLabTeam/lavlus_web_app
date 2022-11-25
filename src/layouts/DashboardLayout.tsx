@@ -6,7 +6,7 @@ import {
   BoxProps,
   ChakraComponent,
 } from "@chakra-ui/react";
-import { Header, Drawer, Notification } from "..";
+import { Header, Drawer, Notification } from "../components";
 
 export const DashboardLayout = ((props: BoxProps) => {
   return (
