@@ -1,39 +1,27 @@
-import { chakra } from "@chakra-ui/react";
-import { MapContainer, TileLayer } from "react-leaflet";
-import Geoman from "./Geoman";
+import { MapContainer, TileLayer } from 'react-leaflet';
+import { LatLng } from 'leaflet';
+import { Geoman } from './Geoman';
 
-import "leaflet/dist/leaflet.css";
+import 'leaflet/dist/leaflet.css';
 
-const ChakraMapContainer = chakra(MapContainer, {
-  baseStyle: {
-    h: "full",
-    w: "full",
-  },
-});
-
-interface MapProps {
-  // edit?: boolean;
-  onChange?: (geo: string) => void;
-}
-
-const Map = ({ onChange }: MapProps) => {
-  const position = [35.1822679, 137.1113604];
+const Map = ({ onChange }: { onChange?: (geoJson: any) => void }) => {
+  const position = new LatLng(35.1822679, 137.1113604);
   const zoomLv = 16;
 
-  const handleChange = (geo: string) => {
-    onChange && onChange(geo);
-  };
-
   return (
-    // @ts-ignore
-    <ChakraMapContainer center={position} zoom={zoomLv} scrollWheelZoom={false}>
+    <MapContainer
+      center={position}
+      zoom={zoomLv}
+      scrollWheelZoom={false}
+      style={{ width: '100%', height: '100%' }}
+    >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        // maxZoom={20}
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        maxZoom={20}
       />
-      <Geoman onChange={handleChange} />
-    </ChakraMapContainer>
+      <Geoman onChange={onChange} />
+    </MapContainer>
   );
 };
 

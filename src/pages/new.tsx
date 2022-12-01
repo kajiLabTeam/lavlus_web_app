@@ -15,6 +15,7 @@ import {
   Input,
   Button,
   HStack,
+  AspectRatio,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
@@ -24,7 +25,7 @@ import { useRecoilValue } from 'recoil';
 
 import { LavlusApi } from '@/utils';
 // import { PeriodOfTimeInput, SensorsInput, Map } from "@/components";
-import { MarkdownEditor, SimpleDatePickerControlled, SensorSingleInput } from '@/components';
+import { MarkdownEditor, SimpleDatePickerControlled, SensorSingleInput, Map } from '@/components';
 import { NewPageTitle, FormSection } from '@/components/pages/new';
 
 // GeoJSON
@@ -171,6 +172,10 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
             image="/undraw/booked.svg"
           >
             <FormControl isInvalid={!!errors.spatiotemporal}>
+              <AspectRatio w="100%" ratio={16 / 9}>
+                <Map onChange={(geoJson) => console.log(geoJson)} />
+              </AspectRatio>
+
               {/* <SimpleDatePickerControlled name="endDate" control={control} /> */}
               <FormErrorMessage>
                 {errors.spatiotemporal && errors.spatiotemporal.message}
