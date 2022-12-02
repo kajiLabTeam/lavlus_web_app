@@ -10,7 +10,7 @@ export const Geoman = ({ onChange }: { onChange?: (geoJson: any) => void }) => {
     const container = context.layerContainer || context.map;
     const geoJson = (container as any).pm.getGeomanLayers(true).toGeoJSON();
     onChange && onChange(geoJson);
-  }, [context]);
+  }, [context, onChange]);
 
   React.useEffect(() => {
     const container = context.layerContainer || context.map;
@@ -38,7 +38,7 @@ export const Geoman = ({ onChange }: { onChange?: (geoJson: any) => void }) => {
       (container as any).pm.removeControls();
       (container as any).pm.setGlobalOptions({ pmIgnore: true });
     };
-  }, [context]);
+  }, [context, handleChange]);
 
   return null;
 };
