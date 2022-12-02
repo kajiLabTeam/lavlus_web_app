@@ -1,80 +1,55 @@
 import React from 'react';
+import { NextPageWithLayoutAndPageExtraInfo, NewProjectValues } from '@/types';
 import {
   Text,
-  Box,
   Heading,
   Stack,
-  Grid,
-  GridItem,
   Container,
-  Flex,
-  Image,
   FormErrorMessage,
-  FormLabel,
   FormControl,
   Input,
   Button,
   HStack,
   AspectRatio,
 } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
-
-// other
-// import dateFormat from "dateformat";
-
-import { LavlusApi } from '@/utils';
-// import { PeriodOfTimeInput, SensorsInput, Map } from "@/components";
 import {
   MarkdownEditor,
+  MdTemplate,
   SimpleDatePickerControlled,
   SensorSingleInput,
-  GeoJsonEditor,
+  GeoJsonEditorControlled,
 } from '@/components';
-// import GeoJsonEditor from '@/components/GeoJsonEditor/GeoJsonEditor';
 import { NewPageTitle, FormSection } from '@/components/pages/new';
-
-// GeoJSON
-import * as turf from '@turf/turf';
-
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter } from 'next/router';
+import { LavlusApi } from '@/utils';
 import * as yup from 'yup';
-
-import { NextPageWithLayoutAndPageExtraInfo, NewProjectValues } from '@/types';
-import { json } from 'node:stream/consumers';
+import * as turf from '@turf/turf';
 
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
   name: yup.string().required('必須項目です'),
   overview: yup.string().required('必須項目です'),
   startDate: yup.string().required('必須項目です'),
   endDate: yup.string().required('必須項目です'),
-  image: yup.string().required('必須項目です'),
   sensors: yup.array(),
-  spatiotemporal: yup.object(),
+  // sensors: yup
+  //   .array()
+  //   .of(
+  //     yup.object().shape({
+  //       type: yup.string().required('必須項目です'),
+  //       refreshRate: yup.string().required('必須項目です'),
+  //     })
+  //   )
+  //   .required('1つ以上のセンサを指定してください'),
+  spatiotemporal: yup.object().shape({
+    location: yup.object(),
+    area: yup.object().required('エリアを定義してください'),
+    ble: yup.object(),
+    wifi: yup.object(),
+    periods: yup.array(),
+  }),
 });
-
-const defaultOverview = `#### 以下はテンプレートです。
-適当な内容に変更してください。
-
-#### 概要
-このプロジェクトは、愛知工業大学の家事研究室が行います。  
-本プロジェクトは、テニスコート場での利用者の運動量を測定しその使用状況を調査する。  
-その調査結果をもとに、より最適な環境改善計画を検討するためのプロジェクトです。
-
-#### 期間や取得するデータの種類
-本センシングプロジェクトの目標は、3ヶ月間の期間のデータを取得し各月ごとの使用状況の推移を調査するものとする。  
-以下、プロジェクトの目標を協力者目線でわかりやすいように記述してください。
-
-#### センサとその使用目的
-本センシングプロジェクトでは以下のセンサの使用を使用します。  
-また、その使用目的を示します。
-
-|センサ|使用目的|備考|
-|:---|:-----|:----|
-|加速度センサ|運動量を測定するために使用します|特になし|
-|ジャイロセンサ|運動量を測定の補助に使用します|特になし|
-`;
 
 const New: NextPageWithLayoutAndPageExtraInfo = () => {
   const {
@@ -85,13 +60,17 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
   } = useForm<NewProjectValues>({
     defaultValues: {
       name: '',
+      overview: MdTemplate,
       startDate: new Date(),
       endDate: new Date(),
+      sensors: [],
+      spatiotemporal: {},
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit: SubmitHandler<NewProjectValues> = (values) => {
+    values.spatiotemporal.location = turf.center(values.spatiotemporal.area);
     alert(JSON.stringify(values, null, 2));
   };
 
@@ -122,7 +101,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
               <MarkdownEditor
                 id="overview"
                 placeholder="MarkDown形式で記述"
-                defaultValue={defaultOverview}
+                defaultValue={MdTemplate}
                 {...register('overview')}
               />
               <FormErrorMessage>{errors.overview && errors.overview.message}</FormErrorMessage>
@@ -166,7 +145,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
             image="/undraw/settings.svg"
           >
             <FormControl isInvalid={!!errors.sensors}>
-              {/* <SimpleDatePickerControlled name="endDate" control={control} /> */}
+              {/* <SensorSingleInput /> */}
               <FormErrorMessage>{errors.sensors && errors.sensors.message}</FormErrorMessage>
             </FormControl>
           </FormSection>
@@ -178,14 +157,22 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
             image="/undraw/booked.svg"
           >
             <FormControl isInvalid={!!errors.spatiotemporal}>
-              <AspectRatio w="100%" ratio={16 / 9}>
-                <GeoJsonEditor onChange={(geoJson) => console.log(geoJson)} />
-              </AspectRatio>
-
-              {/* <SimpleDatePickerControlled name="endDate" control={control} /> */}
-              <FormErrorMessage>
-                {errors.spatiotemporal && errors.spatiotemporal.message}
-              </FormErrorMessage>
+              <Stack spacing={6}>
+                <Heading as="h3" size="lg" borderLeft="36px solid #76E4F7" pl={2}>
+                  エリアの設定
+                </Heading>
+                <Text fontSize="lg">
+                  センシングプロジェクト実施するエリアを指定します。
+                  <br />
+                  左のメニューアイコンより範囲を指定してください。また、エリアは囲まれている必要があります。
+                </Text>
+                <AspectRatio w="100%" ratio={16 / 9}>
+                  <GeoJsonEditorControlled name="spatiotemporal.area" control={control} />
+                </AspectRatio>
+                <FormErrorMessage>
+                  {errors.spatiotemporal?.area && (errors.spatiotemporal.area?.message as string)}
+                </FormErrorMessage>
+              </Stack>
             </FormControl>
           </FormSection>
           <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
