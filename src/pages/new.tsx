@@ -25,7 +25,13 @@ import { useRecoilValue } from 'recoil';
 
 import { LavlusApi } from '@/utils';
 // import { PeriodOfTimeInput, SensorsInput, Map } from "@/components";
-import { MarkdownEditor, SimpleDatePickerControlled, SensorSingleInput, Map } from '@/components';
+import {
+  MarkdownEditor,
+  SimpleDatePickerControlled,
+  SensorSingleInput,
+  GeoJsonEditor,
+} from '@/components';
+// import GeoJsonEditor from '@/components/GeoJsonEditor/GeoJsonEditor';
 import { NewPageTitle, FormSection } from '@/components/pages/new';
 
 // GeoJSON
@@ -173,7 +179,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
           >
             <FormControl isInvalid={!!errors.spatiotemporal}>
               <AspectRatio w="100%" ratio={16 / 9}>
-                <Map onChange={(geoJson) => console.log(geoJson)} />
+                <GeoJsonEditor onChange={(geoJson) => console.log(geoJson)} />
               </AspectRatio>
 
               {/* <SimpleDatePickerControlled name="endDate" control={control} /> */}

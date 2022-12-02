@@ -1,10 +1,10 @@
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { LatLng } from 'leaflet';
-import { Geoman } from './Geoman';
+import { Geoman } from '../Geoman';
 
 import 'leaflet/dist/leaflet.css';
 
-const Map = ({ onChange }: { onChange?: (geoJson: any) => void }) => {
+const GeoJsonEditor = ({ onChange }: { onChange?: (geoJson: any) => void }) => {
   const position = new LatLng(35.1822679, 137.1113604);
   const zoomLv = 16;
 
@@ -25,4 +25,4 @@ const Map = ({ onChange }: { onChange?: (geoJson: any) => void }) => {
   );
 };
 
-export default Map;
+export default GeoJsonEditor;
