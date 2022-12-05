@@ -1,8 +1,12 @@
 import React from 'react';
 import { HStack } from '@chakra-ui/react';
 import { ButtonCheckbox } from '.';
+import { DayOfWeek } from '@/types';
 
-const dayOfWeeks = [
+const dayOfWeeks: {
+  value: DayOfWeek;
+  children: string;
+}[] = [
   { value: 'sun', children: '日' },
   { value: 'mon', children: '月' },
   { value: 'tue', children: '火' },
@@ -13,15 +17,17 @@ const dayOfWeeks = [
 ];
 
 export interface DayOfWeekInputProps {
-  defaultValue?: string[];
-  onChange?: (event: string[]) => void;
+  defaultValue?: DayOfWeek[];
+  onChange?: (event: DayOfWeek[]) => void;
 }
 
 export const DayOfWeekInput = ({ defaultValue, onChange }: DayOfWeekInputProps) => {
-  const [value, setValue] = React.useState<string[]>(defaultValue ?? []);
+  const [value, setValue] = React.useState<DayOfWeek[]>(defaultValue ?? []);
 
-  const handleChange = (newValue: string, checked: boolean) => {
-    const newValues = checked ? [...value, newValue] : value.filter((item) => item !== newValue);
+  const handleChange = (newValue: DayOfWeek, checked: boolean) => {
+    const newValues: DayOfWeek[] = checked
+      ? [...value, newValue]
+      : value.filter((item) => item !== newValue);
     onChange && onChange(newValues);
     setValue(newValues);
   };
@@ -32,7 +38,10 @@ export const DayOfWeekInput = ({ defaultValue, onChange }: DayOfWeekInputProps) 
           key={item.value}
           checked={value.includes(item.value)}
           value={item.value}
-          onChange={(event) => handleChange(event.value, event.checked)}
+          // TODO: ちゃんと型ガードしたほうがいい
+          onChange={(event: any) => {
+            handleChange(event.value, event.checked);
+          }}
         >
           {item.children}
         </ButtonCheckbox>

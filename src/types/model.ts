@@ -17,10 +17,12 @@ export interface Spatiotemporal {
   periods: Period[];
 }
 
+export type DayOfWeek = 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat';
+
 export interface Period {
   interval: number;
   entity: 'day' | 'week';
-  dayOfWeek: ('sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat')[];
+  dayOfWeek: DayOfWeek[];
   startTime: string;
   endTime: string;
 }

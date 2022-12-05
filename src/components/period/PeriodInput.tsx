@@ -22,11 +22,10 @@ export const PeriodInput = ({
 }: PeriodInputProps) => {
   const [value, setValue] = React.useState<Period>(defaultValue);
 
-  const handleChange = (field: keyof Period, newValue: number | string | string[]) => {
+  const handleChange = (newValue: Partial<Period>) => {
     // @ts-ignore
-    value[field] = newValue;
-    onChange && onChange(value);
-    setValue(value);
+    onChange && onChange({ ...value, ...newValue });
+    setValue({ ...value, ...newValue });
   };
 
   return (
@@ -36,14 +35,17 @@ export const PeriodInput = ({
           size="lg"
           variant="flushed"
           type="number"
-          value={value.interval}
-          onChange={(event) => handleChange('interval', event.target.value)}
+          value={value.interval > 0 ? value.interval : ''}
+          onChange={(event) => handleChange({ interval: Number(event.target.value) })}
           textAlign="center"
         />
         <Select
           variant="flushed"
           value={value.entity}
-          onChange={(event) => handleChange('entity', event.target.value)}
+          onChange={(event) => {
+            const entity = event.target.value;
+            if (entity === 'week' || entity === 'day') handleChange({ entity });
+          }}
         >
           <option value="day">日</option>
           <option value="week">週</option>
@@ -53,7 +55,9 @@ export const PeriodInput = ({
       {value.entity === 'week' ? (
         <DayOfWeekInput
           defaultValue={value.dayOfWeek}
-          onChange={(value) => handleChange('dayOfWeek', value)}
+          onChange={(value) => {
+            handleChange({ dayOfWeek: value });
+          }}
         />
       ) : (
         <></>
@@ -64,14 +68,14 @@ export const PeriodInput = ({
           <Text>開始時間</Text>
           <SimpleTimePicker
             value={value.startTime}
-            onChange={(value) => handleChange('startTime', value)}
+            onChange={(value) => handleChange({ startTime: value })}
           />
         </VStack>
         <VStack>
           <Text>終了時間</Text>
           <SimpleTimePicker
             value={value.endTime}
-            onChange={(value) => handleChange('endTime', value)}
+            onChange={(value) => handleChange({ endTime: value })}
           />
         </VStack>
       </Flex>
