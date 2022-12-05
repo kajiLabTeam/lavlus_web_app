@@ -16,7 +16,7 @@ import {
   MarkdownEditor,
   MdTemplate,
   SimpleDatePickerControlled,
-  SensorSingleInput,
+  SensorMultiInputControlled,
   GeoJsonEditorControlled,
 } from '@/components';
 import { NewPageTitle, FormSection } from '@/components/pages/new';
@@ -26,6 +26,9 @@ import { useRouter } from 'next/router';
 import { LavlusApi } from '@/utils';
 import * as yup from 'yup';
 import * as turf from '@turf/turf';
+
+import { CheckboxGroup } from '@chakra-ui/react';
+import { DayOfWeekInput, PeriodInput } from '@/components/period';
 
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
   name: yup.string().required('必須項目です'),
@@ -76,7 +79,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Container maxW="1000px" p={6}>
+      <Container maxW="1000px" py={6} px={0}>
         <Stack spacing={24}>
           <NewPageTitle />
           <FormSection
@@ -145,7 +148,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
             image="/undraw/settings.svg"
           >
             <FormControl isInvalid={!!errors.sensors}>
-              {/* <SensorSingleInput /> */}
+              <SensorMultiInputControlled name="sensors" control={control} />
               <FormErrorMessage>{errors.sensors && errors.sensors.message}</FormErrorMessage>
             </FormControl>
           </FormSection>
@@ -178,6 +181,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
           <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
             プロジェクトを作成
           </Button>
+          <PeriodInput onChange={(e) => console.log(e)} />
         </Stack>
       </Container>
     </form>

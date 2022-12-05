@@ -6,7 +6,7 @@ export interface ModelBase {
 
 export interface Sensor {
   type: string;
-  refreshRate: number | string;
+  refreshRate: number;
 }
 
 export interface Spatiotemporal {
@@ -18,11 +18,11 @@ export interface Spatiotemporal {
 }
 
 export interface Period {
-  interval: 1;
+  interval: number;
   entity: 'day' | 'week';
   dayOfWeek: ('sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat')[];
-  startTime: string | Date;
-  endTime: string | Date;
+  startTime: string;
+  endTime: string;
 }
 
 export interface Project extends ModelBase {
