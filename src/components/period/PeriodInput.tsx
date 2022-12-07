@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Stack, HStack, VStack, Select, Flex, Text } from '@chakra-ui/react';
+import { Input, Stack, VStack, Select, Flex, Text } from '@chakra-ui/react';
 import { SimpleTimePicker, DayOfWeekInput } from '.';
 
 import { Period } from '@/types';
@@ -30,7 +30,7 @@ export const PeriodInput = ({
 
   return (
     <Stack bg="gray.100" borderRadius="20px" p="25px" alignItems="center" spacing={8}>
-      <HStack w="200px">
+      <Flex w="200px" alignItems="flex-end">
         <Input
           size="lg"
           variant="flushed"
@@ -40,6 +40,7 @@ export const PeriodInput = ({
           textAlign="center"
         />
         <Select
+          size="lg"
           variant="flushed"
           value={value.entity}
           onChange={(event) => {
@@ -50,7 +51,7 @@ export const PeriodInput = ({
           <option value="day">日</option>
           <option value="week">週</option>
         </Select>
-      </HStack>
+      </Flex>
 
       {value.entity === 'week' ? (
         <DayOfWeekInput

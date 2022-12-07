@@ -2,13 +2,12 @@ import React from 'react';
 import { IconButton, Grid } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { Badge } from '../../common';
-import { PeriodOfTimeSingleInput } from './PeriodInput';
-import { FieldArray, useFormikContext } from 'formik';
-import { NewProjectValues, PeriodOfTime } from '../../types';
+// import { Badge } from '../../common';
+import { PeriodInput } from '.';
+import { Period } from '@/types';
 import _ from 'lodash';
 
-const defaultValue: PeriodOfTime = {
+const defaultValue: Period = {
   interval: {
     length: 1,
     entity: 'week',
@@ -21,8 +20,6 @@ const defaultValue: PeriodOfTime = {
 };
 
 export const PeriodOfTimeInput = () => {
-  const { values, setFieldValue } = useFormikContext<NewProjectValues>();
-
   const {
     spatiotemporalSetting: { periods },
   } = values;
@@ -48,34 +45,29 @@ export const PeriodOfTimeInput = () => {
   };
 
   return (
-    <FieldArray
-      name="spatiotemporalSetting.periods"
-      render={(arrayHelpers) => (
-        <Grid gap={4}>
-          {formValues.map((period, index) => (
-            <Badge
-              key={period.key}
-              colorScheme="red"
-              bg="red.400"
-              icon={RiDeleteBin6Fill}
-              onClick={() => handleDeleteChange(period.key)}
-            >
-              <PeriodOfTimeSingleInput
-                value={_.omit(period, ['key'])}
-                onChange={(value) => handleChange(value, index)}
-              />
-            </Badge>
-          ))}
-          <IconButton
-            m="auto"
-            size="md"
-            colorScheme="blue"
-            icon={<AddIcon />}
-            aria-label="Add"
-            onClick={() => arrayHelpers.push({ ...defaultValue })}
+    <Grid gap={4}>
+      {formValues.map((period, index) => (
+        <Badge
+          key={period.key}
+          colorScheme="red"
+          bg="red.400"
+          icon={RiDeleteBin6Fill}
+          onClick={() => handleDeleteChange(period.key)}
+        >
+          <PeriodOfTimeSingleInput
+            value={_.omit(period, ['key'])}
+            onChange={(value) => handleChange(value, index)}
           />
-        </Grid>
-      )}
-    />
+        </Badge>
+      ))}
+      <IconButton
+        m="auto"
+        size="md"
+        colorScheme="blue"
+        icon={<AddIcon />}
+        aria-label="Add"
+        onClick={() => arrayHelpers.push({ ...defaultValue })}
+      />
+    </Grid>
   );
 };
