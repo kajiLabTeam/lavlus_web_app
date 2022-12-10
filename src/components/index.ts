@@ -7,5 +7,4 @@ export * from './MarkdownEditor';
 export * from './sensor';
 export * from './Badge';
 export * from './leaflet';
-
-// export * from "./PeriodOfTimeInput";
+export * from './period';
