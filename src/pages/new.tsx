@@ -28,7 +28,7 @@ import * as yup from 'yup';
 import * as turf from '@turf/turf';
 
 import { CheckboxGroup } from '@chakra-ui/react';
-import { DayOfWeekInput, PeriodInput } from '@/components/period';
+import { DayOfWeekInput, PeriodInput, PeriodMultiInputControlled } from '@/components/period';
 
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
   name: yup.string().required('必須項目です'),
@@ -67,7 +67,9 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
       startDate: new Date(),
       endDate: new Date(),
       sensors: [],
-      spatiotemporal: {},
+      spatiotemporal: {
+        periods: [{}, {}],
+      },
     },
     resolver: yupResolver(schema),
   });
@@ -182,6 +184,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
             プロジェクトを作成
           </Button>
           <PeriodInput onChange={(e) => console.log(e)} />
+          <PeriodMultiInputControlled name="spatiotemporal.periods" control={control} />
         </Stack>
       </Container>
     </form>
