@@ -30,7 +30,7 @@ import { useRouter } from 'next/router';
 import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
 
 import { RequesterInfo } from '@/types';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
 const Register: NextPageWithLayoutAndPageExtraInfo = () => {
   const {
@@ -49,13 +49,8 @@ const Register: NextPageWithLayoutAndPageExtraInfo = () => {
     },
   });
 
-  const onSubmit = (values: any) => {
-    return new Promise((resolve: any) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
-    });
+  const onSubmit: SubmitHandler<RequesterInfo> = (values) => {
+    alert(JSON.stringify(values, null, 2));
   };
 
   return (
