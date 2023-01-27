@@ -88,7 +88,11 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
 
   const onSubmit: SubmitHandler<NewProjectValues> = async (values) => {
     // 重心座標を追加
-    values.spatiotemporal.location = turf.center(values.spatiotemporal.area);
+    const centerGeoJSON = turf.center(values.spatiotemporal.area);
+    values.spatiotemporal.location = {
+      latitude: centerGeoJSON.geometry.coordinates[1],
+      longitude: centerGeoJSON.geometry.coordinates[0],
+    };
     // ISO Date Time に変換
     if (values.startDate instanceof Date) values.startDate = values.startDate.toISOString();
     if (values.endDate instanceof Date) values.endDate = values.endDate.toISOString();
@@ -97,8 +101,8 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
       if (period.entity === 'day') return { ...period, dayOfWeek: [] };
       return period;
     });
+
     console.log(JSON.stringify(values, null, 2));
-    console.log(values);
 
     if (firebaseAuth.currentUser) {
       const data = await LavlusApi.createProject({
