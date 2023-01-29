@@ -32,8 +32,16 @@ import * as turf from '@turf/turf';
 import _ from 'lodash';
 
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
-  name: yup.string().required('必須項目です'),
-  overview: yup.string().required('必須項目です'),
+  name: yup
+    .string()
+    .required('必須項目です')
+    .min(4, '4文字以上で入力してください')
+    .max(30, '30文字以下で入力してください'),
+  overview: yup
+    .string()
+    .required('必須項目です')
+    .min(10, '10文字以上で入力してください')
+    .max(2000, '2000文字以下で入力してください'),
   startDate: yup.date().required('必須項目です'),
   endDate: yup.date().required('必須項目です'),
   sensors: yup
