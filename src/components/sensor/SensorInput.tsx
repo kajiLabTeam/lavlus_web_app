@@ -26,7 +26,7 @@ export const SensorInput = React.memo(
   ({
     value = { type: 'accelerometer', refreshRate: 0 },
     presets = [50, 100, 200],
-    label = '加速度センサ',
+    label = '加速度',
     icon = BsSpeedometer2,
     onChange,
   }: SensorInputProps) => {
