@@ -1,17 +1,34 @@
 import React from 'react';
-import { Container, Center, Stack, Input, Textarea, Button, Text, Heading } from '@chakra-ui/react';
-import { Radio, RadioGroup } from '@chakra-ui/react';
-import { FormErrorMessage, FormLabel, FormControl } from '@chakra-ui/react';
-import { firebaseAuth } from '@/utils';
-import { LavlusApi } from '@/utils';
-import { useRouter } from 'next/router';
+import {
+  Container,
+  Center,
+  Stack,
+  Input,
+  Textarea,
+  Button,
+  Text,
+  Heading,
+  Radio,
+  RadioGroup,
+  FormErrorMessage,
+  FormLabel,
+  FormControl,
+} from '@chakra-ui/react';
+import { BirthdayPicker } from 'react-birthday-picker';
+
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { BirthdayPicker } from 'react-birthday-picker';
+
+import { NextPageWithLayoutAndPageExtraInfo, RequesterInfo } from '@/types';
+import { StandardLayout } from '@/layouts';
+
+import { firebaseAuth } from '@/utils';
+import { LavlusApi } from '@/utils';
+
 import { parse } from 'date-fns';
 import ja from 'date-fns/locale/ja';
-import { NextPageWithLayoutAndPageExtraInfo, RequesterInfo } from '@/types';
+import { useRouter } from 'next/router';
 
 // @ts-ignore
 const schema: yup.SchemaOf<Omit<RequesterInfo, 'createdAt' | 'updatedAt'>> = yup.object().shape({
@@ -64,14 +81,14 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
   };
 
   return (
-    <Container maxW="1000px" h="100vh">
-      <Center w="100%" h="100%">
+    <Container maxW="1000px">
+      <Center h="100%" py={16}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack gap={4} align="center">
             <Heading size="3xl">依頼者登録 🎓</Heading>
             <Text maxW="500px">
-              Lavlusで依頼者として利用を行うには依頼者登録をする必要が
-              あります。これは、協力者にとってどんな人物からの依頼なのかを判断するために必要な情報です。以下のフォームを入力し、続行してください。
+              Lavlusで依頼者として利用を行うには依頼者登録をする必要があります。
+              これは、協力者にとってどんな人物からの依頼なのかを判断するために必要な情報です。以下のフォームを入力し、続行してください。
             </Text>
 
             <FormControl isInvalid={!!errors.realm}>
@@ -181,5 +198,7 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
     </Container>
   );
 };
-
+RequesterInfo.getLayout = (page: React.ReactElement) => {
+  return <StandardLayout>{page}</StandardLayout>;
+};
 export default RequesterInfo;

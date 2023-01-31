@@ -248,5 +248,4 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
 };
 
 New.needsAuthentication = true;
-
 export default New;
