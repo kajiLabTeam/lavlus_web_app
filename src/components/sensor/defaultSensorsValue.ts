@@ -2,12 +2,14 @@
 import { MdGpsFixed, MdVibration, MdCloud } from 'react-icons/md';
 // light, noiseLevel, wifi, accelerometer
 import { BsLightbulbFill, BsSoundwave, BsWifi, BsSpeedometer2 } from 'react-icons/bs';
-// ble
-import { FaBluetooth } from 'react-icons/fa';
+// ble, temp
+import { FaBluetooth, FaTemperatureLow } from 'react-icons/fa';
 // gyroscope
 import { GiSpinningTop } from 'react-icons/gi';
 // magnetometer
 import { IoMagnetSharp } from 'react-icons/io5';
+// gravity
+import { ImEarth } from 'react-icons/im';
 
 import { SensorInputProps } from '.';
 
@@ -46,7 +48,7 @@ export const defaultSensorsValue: Required<Omit<SensorInputProps, 'onChange'>>[]
     value: { type: 'gravity', refreshRate: 0 },
     presets: [50, 100, 200],
     label: '重力',
-    icon: BsSpeedometer2,
+    icon: ImEarth,
   },
   {
     value: { type: 'gyroscope', refreshRate: 0 },
@@ -68,21 +70,21 @@ export const defaultSensorsValue: Required<Omit<SensorInputProps, 'onChange'>>[]
   },
   {
     value: { type: 'ambient_temperature', refreshRate: 0 },
-    presets: [50, 100, 200],
+    presets: [0.1, 0.2, 1],
     label: '周囲の気温',
-    icon: GiSpinningTop,
+    icon: FaTemperatureLow,
   },
   {
     value: { type: 'relative_humidity', refreshRate: 0 },
-    presets: [50, 100, 200],
+    presets: [0.1, 0.2, 1],
     label: '相対湿度',
-    icon: GiSpinningTop,
+    icon: FaTemperatureLow,
   },
   {
     value: { type: 'temperature', refreshRate: 0 },
-    presets: [50, 100, 200],
+    presets: [0.1, 0.2, 1],
     label: '端末温度',
-    icon: GiSpinningTop,
+    icon: FaTemperatureLow,
   },
   {
     value: { type: 'light', refreshRate: 0 },
