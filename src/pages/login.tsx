@@ -89,7 +89,6 @@ const Login: NextPageWithLayoutAndPageExtraInfo = () => {
           </Stack>
         </Center>
       </Container>
-
       {/* ---- ここからモーダル ---- */}
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
