@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import type { NextPage, GetServerSideProps } from 'next';
-import Link from 'next/link';
+
 import {
   Box,
   Text,
@@ -15,15 +14,23 @@ import {
   GridItem,
   Center,
   Divider,
+  Input,
   Container,
   Tag,
   HStack,
+  Link,
+  Card,
 } from '@chakra-ui/react';
 import useSWR from 'swr';
+
+import { BiHomeAlt, BiLibrary } from 'react-icons/bi';
+
 import { User, Project } from '../../types';
 import { useIdToken } from '@/hooks';
 import { format } from 'date-fns';
 import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
+
+import { LavlusIcon } from '@/components/icons';
 
 const ProjectList: NextPageWithLayoutAndPageExtraInfo = () => {
   const router = useRouter();
@@ -33,52 +40,136 @@ const ProjectList: NextPageWithLayoutAndPageExtraInfo = () => {
   const { data: user } = useSWR<User>([`/me`, token]);
 
   return (
-    <Container maxW="container.xl" pt="50px">
-      <Grid templateRows="40px auto" templateColumns="320px 1fr" gap={12} px={12}>
-        <GridItem colSpan={2}>
-          <Heading borderLeft="solid orange 12px" pl="12px">
-            {username}のProject一覧
-          </Heading>
-        </GridItem>
+    <>
+      {/* TODO: ここはレイアウトとして別に書く */}
+      <HStack w="100vw" h="48px" bg="blue.900" position="sticky" px={4} spacing={8}>
+        <HStack>
+          <LavlusIcon w="36px" h="36px" />
+          <Text fontSize="xl" fontWeight="bold" color="white">
+            Lavlus
+          </Text>
+        </HStack>
 
-        <GridItem>
-          <Center>{user && <OwnerInfo user={user} />}</Center>
-        </GridItem>
-        <Stack spacing={6}>
-          <Flex justify="end">
-            <Link href="/new">
-              <Button w={100} colorScheme="teal">
-                + New
-              </Button>
-            </Link>
-          </Flex>
+        <Input
+          width={300}
+          size="sm"
+          variant="outline"
+          placeholder="他のプロジェクトを探す"
+          borderRadius="full"
+        />
+        <Box flex={1} />
+        <Avatar size="sm" src={user && user.picture} />
+      </HStack>
 
-          <Divider />
-          {/* <pre>{JSON.stringify(projects, null, 2)}</pre> */}
-          {projects &&
-            user &&
-            projects.map((project) => (
-              <ProjectCard project={project} user={user} key={project.id} />
-            ))}
-        </Stack>
-      </Grid>
-    </Container>
+      <Container maxW="container.xl" pt={16}>
+        <Grid templateColumns="300px 1fr" gap={12} px={12}>
+          <GridItem>
+            <Center>{user && <RequesterInfoView user={user} />}</Center>
+          </GridItem>
+
+          <GridItem>
+            <ProjectListMenu />
+            <Stack mt={8} spacing={8}>
+              {projects &&
+                user &&
+                projects.map((project) => (
+                  <ProjectCard project={project} user={user} key={project.id} />
+                ))}
+            </Stack>
+          </GridItem>
+        </Grid>
+      </Container>
+    </>
   );
 };
 
-const OwnerInfo = ({ user }: { user: User }) => {
+const ProjectListMenu = () => {
+  // own or other
+  const [select, setSelect] = React.useState('own');
+  const router = useRouter();
   return (
-    <Stack>
-      <Avatar size="3xl" src={user.picture} />
-      <Text fontSize="4xl" fontWeight="bold">
-        @{user.name}
-      </Text>
-      {user.requesterInfo && (
-        <>
-          <Text fontSize="2xl">{user.requesterInfo.realm}</Text>
-          <Text color="gray.500">{user.requesterInfo.introduction}</Text>
-        </>
-      )}
+    <HStack h="44px" justify="space-between" borderBottom="solid 4px #4A5568">
+      <HStack spacing={4}>
+        <Button
+          fontSize="xl"
+          fontWeight="bold"
+          variant="ghost"
+          borderRadius={0}
+          bottom={-1}
+          borderBottom={select === 'own' ? 'solid 4px #ED8936' : 'solid 4px #4A5568'}
+          onClick={() => setSelect('own')}
+        >
+          <BiHomeAlt />
+          プロジェクト
+        </Button>
+        <Button
+          fontSize="xl"
+          fontWeight="bold"
+          variant="ghost"
+          borderRadius={0}
+          bottom={-1}
+          borderBottom={select === 'other' ? 'solid 4px #ED8936' : 'solid 4px #4A5568'}
+          onClick={() => setSelect('other')}
+        >
+          <BiLibrary />
+          参加プロジェクト
+        </Button>
+      </HStack>
+      <Button w={120} size="sm" colorScheme="teal" onClick={() => router.push('/new')}>
+        + New
+      </Button>
+    </HStack>
+  );
+};
+
+const RequesterInfoView = ({ user }: { user: User }) => {
+  return (
+    <Stack width="360px" spacing={8}>
+      {/* アイコンと名前の部分 */}
+      <Grid templateRows="auto  1fr" templateColumns="auto 1fr" gap="0px 16px">
+        <GridItem rowSpan={2}>
+          <Avatar size="lg" src={user.picture} />
+        </GridItem>
+        <Text fontSize="3xl" fontWeight="bold">
+          {user.name}
+        </Text>
+        <Text fontSize="lg" color="gray.500" mt="auto">
+          {user.requesterInfo.realm}
+        </Text>
+      </Grid>
+      {/* 自己紹介 */}
+      <Stack spacing={4}>
+        <Text fontSize="xl" fontWeight="bold" borderBottom="solid 1px">
+          所属機関
+        </Text>
+        <Text as="pre" color="gray.600">
+          {user.requesterInfo.organization}
+        </Text>
+      </Stack>
+      {/* 自己紹介 */}
+      <Stack spacing={4}>
+        <Text fontSize="xl" fontWeight="bold" borderBottom="solid 1px">
+          リンク
+        </Text>
+        <Stack>
+          <Link href={user.requesterInfo.url} color="orange.400">
+            {user.requesterInfo.url}
+          </Link>
+          <Link href={`mailto:${user.email}`} color="orange.400">
+            {user.email}
+          </Link>
+        </Stack>
+      </Stack>
+
+      {/* 自己紹介 */}
+      <Stack spacing={4}>
+        <Text fontSize="xl" fontWeight="bold" borderBottom="solid 1px">
+          自己紹介
+        </Text>
+        <Text as="pre" color="gray.600">
+          {user.requesterInfo.introduction}
+        </Text>
+      </Stack>
     </Stack>
   );
 };
@@ -86,44 +177,38 @@ const OwnerInfo = ({ user }: { user: User }) => {
 const ProjectCard = ({ project, user }: { project: Project; user: User }) => {
   const router = useRouter();
   return (
-    <Grid
-      h="200px"
-      bg="gray.300"
-      borderRadius="xl"
-      // templateRows="40px auto"
-      templateColumns="120px 1fr"
-      p={4}
-      gap={8}
-      onClick={() => router.push(`${user.name}/${project.id}`)}
-    >
-      <GridItem overflow="hidden" borderRadius="lg">
+    <Card boxShadow="0px 0px 12px -4px #777777" borderRadius={24}>
+      <Grid templateColumns={'200px 1fr'}>
         <Image
+          borderRadius="24px 0 0 24px"
           width="100%"
           height="100%"
           objectFit="cover"
           src={project.image}
           alt="ProjectImage"
         />
-      </GridItem>
-      <GridItem>
-        <Stack h="100%">
-          <Text fontSize="2xl" fontWeight="bold">
+
+        <Stack h="100%" p={4}>
+          <Text fontSize="lg" fontWeight="bold">
             {project.name}
           </Text>
+
           <HStack>
-            <Tag variant="solid" colorScheme="teal">
-              開始日: {format(new Date(project.startDate), 'yyyy年mm月dd日')}
+            <Tag variant="outline" colorScheme="teal">
+              開始日:
+              {format(new Date(project.startDate), 'yyyy-mm-dd')}
             </Tag>
-            <Tag variant="solid" colorScheme="orange">
-              終了日: {format(new Date(project.endDate), 'yyyy年mm月dd日')}
+            <Tag variant="outline" colorScheme="orange">
+              終了日:
+              {format(new Date(project.endDate), 'yyyy-mm-dd')}
             </Tag>
           </HStack>
-          <Box bg="gray.100" borderRadius="lg" flex={1} p={2} overflow="hidden">
+          <Box borderRadius="lg" px={2} m={0}>
             <Text>{project.overview?.slice(0, 100)}...</Text>
           </Box>
         </Stack>
-      </GridItem>
-    </Grid>
+      </Grid>
+    </Card>
   );
 };
 
