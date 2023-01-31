@@ -1,7 +1,11 @@
-import React from "react";
-import { ReactNode } from "react";
-import { useRouter } from "next/router";
-import { firebaseAuth } from "@/utils";
+import React from 'react';
+import { ReactNode } from 'react';
+import { useRouter } from 'next/router';
+import { firebaseAuth } from '@/utils';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useIdToken } from '@/hooks';
+import { User } from '@/types';
+import useSWR from 'swr';
 
 interface AuthProps {
   children: ReactNode;
@@ -10,31 +14,28 @@ interface AuthProps {
 
 const Auth = ({ children, needsAuthentication }: AuthProps) => {
   const router = useRouter();
-  const [signInCheck, setSignInCheck] = React.useState<boolean>();
-
-  // サインイン状態のチェックを行う
-  React.useEffect(() => {
-    firebaseAuth.onAuthStateChanged((user) => {
-      // サインイン済み
-      if (user) setSignInCheck(true);
-      // サインインしていない状態
-      else setSignInCheck(false);
-    });
-  }, []);
+  const [user, loading, error] = useAuthState(firebaseAuth);
+  const token = useIdToken();
+  const { data: me } = useSWR<User>([`/me`, token]);
 
   // 認証が必要でないページなら、内容をそのまま表示する
   if (!needsAuthentication) return <>{children}</>;
 
   // 認証のチェックが終了していなければ、表示しない
-  if (signInCheck === undefined) return null;
+  if (loading) return null;
 
-  // 認証のチェックが終了したら、ページを遷移させる
-  if (signInCheck) {
+  if (user) {
     // サインイン済み
-    return <>{children}</>;
+    // 依頼者情報が登録されているかチェックする
+    if (me?.allowRequest) return <>{children}</>;
+    else {
+      // 依頼者登録されていなければ、登録画面へ
+      router.replace('/requesterInfo');
+      return null;
+    }
   } else {
     // サインインしていない状態
-    router.replace("/login");
+    router.replace('/login');
     return null;
   }
 };
