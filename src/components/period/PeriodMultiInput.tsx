@@ -1,73 +1,96 @@
 import React from 'react';
-import { IconButton, Grid } from '@chakra-ui/react';
+import { IconButton, Box, Stack } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-// import { Badge } from '../../common';
 import { PeriodInput } from '.';
 import { Period } from '@/types';
-import _ from 'lodash';
+import { Control, FieldPath, FieldValues, useController } from 'react-hook-form';
 
-const defaultValue: Period = {
-  interval: {
-    length: 1,
-    entity: 'week',
-    dayOfWeek: ['mon', 'wed', 'fri'],
-  },
-  period: {
-    from: '10:00:00',
-    to: '12:00:00',
-  },
+const defaultPeriod: Period = {
+  interval: 1,
+  entity: 'week',
+  dayOfWeek: ['mon', 'tue', 'wed'],
+  startTime: '10:00:00',
+  endTime: '14:00:00',
 };
 
-export const PeriodOfTimeInput = () => {
-  const {
-    spatiotemporalSetting: { periods },
-  } = values;
+export interface PeriodMultiInputProps {
+  defaultValue?: Period[];
+  onChange?: (periods: Period[]) => void;
+}
 
-  const formValues = periods.map((item) => ({ ...item, key: Math.random() }));
+export const PeriodMultiInput = ({
+  defaultValue = [defaultPeriod],
+  onChange,
+}: PeriodMultiInputProps) => {
+  const [value, setValue] = React.useState(defaultValue);
+  const id = React.useId();
 
-  // 変更
-  const handleChange = (value: PeriodOfTime, index: number) => {
-    formValues[index] = { ...value, key: formValues[index].key };
-    setFieldValue(
-      `spatiotemporalSetting.periods`,
-      formValues.map((item) => _.omit(item, ['key']))
-    );
+  const handleChange = (newValue: Period[]) => {
+    onChange && onChange(newValue);
+    setValue(newValue);
+  };
+
+  const handlePeriodInputChange = (period: Period, index: number) => {
+    value[index] = period;
+    handleChange([...value]);
   };
 
   // 削除
-  const handleDeleteChange = (key: number) => {
-    const deletedData = formValues.filter((item) => item.key !== key);
-    setFieldValue(
-      `spatiotemporalSetting.periods`,
-      deletedData.map((item) => _.omit(item, ['key']))
-    );
+  const handleDelete = (index: number) => {
+    handleChange(value.filter((period, i) => i !== index));
+  };
+
+  const handleAdd = () => {
+    handleChange([...value, defaultPeriod]);
   };
 
   return (
-    <Grid gap={4}>
-      {formValues.map((period, index) => (
-        <Badge
-          key={period.key}
-          colorScheme="red"
-          bg="red.400"
-          icon={RiDeleteBin6Fill}
-          onClick={() => handleDeleteChange(period.key)}
-        >
-          <PeriodOfTimeSingleInput
-            value={_.omit(period, ['key'])}
-            onChange={(value) => handleChange(value, index)}
+    <Stack gap={4}>
+      {value.map((period, index) => (
+        <Box key={id + Math.random()} position="relative">
+          <IconButton
+            colorScheme="red"
+            icon={<RiDeleteBin6Fill />}
+            aria-label="delete"
+            borderRadius="50%"
+            position="absolute"
+            top="-15px"
+            right="-15px"
+            onClick={() => handleDelete(index)}
           />
-        </Badge>
+          <PeriodInput
+            defaultValue={period}
+            onChange={(newPeriod) => {
+              handlePeriodInputChange(newPeriod, index);
+            }}
+          />
+        </Box>
       ))}
       <IconButton
-        m="auto"
+        w="100%"
         size="md"
         colorScheme="blue"
         icon={<AddIcon />}
         aria-label="Add"
-        onClick={() => arrayHelpers.push({ ...defaultValue })}
+        onClick={() => handleAdd()}
       />
-    </Grid>
+    </Stack>
   );
+};
+
+export interface PeriodMultiInputControlledProps<T extends FieldValues> {
+  name: FieldPath<T>;
+  control: Control<T>;
+}
+
+export const PeriodMultiInputControlled = <T extends FieldValues>({
+  name,
+  control,
+}: PeriodMultiInputControlledProps<T>) => {
+  const { field } = useController({
+    name,
+    control,
+  });
+  return <PeriodMultiInput defaultValue={field.value} onChange={field.onChange} />;
 };

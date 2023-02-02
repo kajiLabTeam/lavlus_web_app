@@ -18,33 +18,41 @@ import {
   SimpleDatePickerControlled,
   SensorMultiInputControlled,
   GeoJsonEditorControlled,
+  PeriodMultiInputControlled,
 } from '@/components';
+import { firebaseAuth } from '@/utils';
+import { LavlusApi } from '@/utils';
+import { useRouter } from 'next/router';
 import { NewPageTitle, FormSection } from '@/components/pages/new';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useRouter } from 'next/router';
-import { LavlusApi } from '@/utils';
+import { addMonths } from 'date-fns';
 import * as yup from 'yup';
 import * as turf from '@turf/turf';
-
-import { CheckboxGroup } from '@chakra-ui/react';
-import { DayOfWeekInput, PeriodInput } from '@/components/period';
+import _ from 'lodash';
 
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
-  name: yup.string().required('必須項目です'),
-  overview: yup.string().required('必須項目です'),
-  startDate: yup.string().required('必須項目です'),
-  endDate: yup.string().required('必須項目です'),
-  sensors: yup.array(),
-  // sensors: yup
-  //   .array()
-  //   .of(
-  //     yup.object().shape({
-  //       type: yup.string().required('必須項目です'),
-  //       refreshRate: yup.string().required('必須項目です'),
-  //     })
-  //   )
-  //   .required('1つ以上のセンサを指定してください'),
+  name: yup
+    .string()
+    .required('必須項目です')
+    .min(4, '4文字以上で入力してください')
+    .max(30, '30文字以下で入力してください'),
+  overview: yup
+    .string()
+    .required('必須項目です')
+    .min(10, '10文字以上で入力してください')
+    .max(2000, '2000文字以下で入力してください'),
+  startDate: yup.date().required('必須項目です'),
+  endDate: yup.date().required('必須項目です'),
+  sensors: yup
+    .array()
+    .of(
+      yup.object().shape({
+        type: yup.string().required('必須項目です'),
+        refreshRate: yup.number().required('必須項目です'),
+      })
+    )
+    .required('1つ以上のセンサを指定してください'),
   spatiotemporal: yup.object().shape({
     location: yup.object(),
     area: yup.object().required('エリアを定義してください'),
@@ -55,6 +63,8 @@ const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
 });
 
 const New: NextPageWithLayoutAndPageExtraInfo = () => {
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -65,16 +75,50 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
       name: '',
       overview: MdTemplate,
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: addMonths(new Date(), 1),
       sensors: [],
-      spatiotemporal: {},
+      spatiotemporal: {
+        ble: {},
+        wifi: {},
+        periods: [
+          {
+            interval: 1,
+            entity: 'week',
+            dayOfWeek: ['mon', 'tue', 'wed'],
+            startTime: '10:00:00',
+            endTime: '14:00:00',
+          },
+        ],
+      },
     },
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<NewProjectValues> = (values) => {
-    values.spatiotemporal.location = turf.center(values.spatiotemporal.area);
-    alert(JSON.stringify(values, null, 2));
+  const onSubmit: SubmitHandler<NewProjectValues> = async (values) => {
+    // 重心座標を追加
+    const centerGeoJSON = turf.center(values.spatiotemporal.area);
+    values.spatiotemporal.location = {
+      latitude: centerGeoJSON.geometry.coordinates[1],
+      longitude: centerGeoJSON.geometry.coordinates[0],
+    };
+    // ISO Date Time に変換
+    if (values.startDate instanceof Date) values.startDate = values.startDate.toISOString();
+    if (values.endDate instanceof Date) values.endDate = values.endDate.toISOString();
+    // entityがdayの場合は、dayOfWeekを空配列に
+    values.spatiotemporal.periods = values.spatiotemporal.periods.map((period) => {
+      if (period.entity === 'day') return { ...period, dayOfWeek: [] };
+      return period;
+    });
+
+    console.log(JSON.stringify(values, null, 2));
+
+    if (firebaseAuth.currentUser) {
+      const data = await LavlusApi.createProject({
+        values,
+        token: await firebaseAuth.currentUser.getIdToken(),
+      });
+      if (data) router.replace(`/${firebaseAuth.currentUser.displayName}`);
+    }
   };
 
   return (
@@ -162,6 +206,22 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
             <FormControl isInvalid={!!errors.spatiotemporal}>
               <Stack spacing={6}>
                 <Heading as="h3" size="lg" borderLeft="36px solid #76E4F7" pl={2}>
+                  時間帯の設定
+                </Heading>
+                <Text fontSize="lg">
+                  センシングプロジェクトが開始される時間帯を入力してください。
+                  <br />
+                  毎日の9:00~10:00に加えて、隔週の土曜日の16:00~18:00と言ったしても可能です。
+                  <br />
+                  複数の時間帯を登録する場合、下に配置されたボタンより追加します。
+                </Text>
+                <PeriodMultiInputControlled name="spatiotemporal.periods" control={control} />
+                <FormErrorMessage>
+                  {errors.spatiotemporal?.periods &&
+                    (errors.spatiotemporal.periods?.message as string)}
+                </FormErrorMessage>
+
+                <Heading as="h3" size="lg" borderLeft="36px solid #76E4F7" pl={2}>
                   エリアの設定
                 </Heading>
                 <Text fontSize="lg">
@@ -181,7 +241,6 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
           <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
             プロジェクトを作成
           </Button>
-          <PeriodInput onChange={(e) => console.log(e)} />
         </Stack>
       </Container>
     </form>
@@ -189,5 +248,4 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
 };
 
 New.needsAuthentication = true;
-
 export default New;
