@@ -26,9 +26,8 @@ const Auth = ({ children, needsAuthentication }: AuthProps) => {
 
   if (user) {
     // サインイン済み
-    if (me == undefined) return null;
     // 依頼者情報が登録されているかチェックする
-    if (me.allowRequest) return <>{children}</>;
+    if (me?.allowRequest) return <>{children}</>;
     else {
       // 依頼者登録されていなければ、登録画面へ
       router.replace('/requesterInfo');
