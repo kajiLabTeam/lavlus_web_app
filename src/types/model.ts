@@ -39,10 +39,7 @@ export interface Project extends ModelBase {
   members: string[];
 }
 
-export type NewProjectValues = Omit<
-  Project,
-  'id' | 'owner' | 'image' | 'members' | 'createdAt' | 'updatedAt'
->;
+export type NewProjectValues = Omit<Project, 'owner' | 'image' | 'members'>;
 
 export interface User extends Omit<ModelBase, 'id'> {
   uid: string;
