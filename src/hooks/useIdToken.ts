@@ -1,10 +1,10 @@
 import React from 'react';
-import { firebaseAuth } from '@/utils';
+import { auth } from '@/utils';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 export const useIdToken = () => {
   const [token, setToken] = React.useState<string>();
-  const [user, loading, error] = useAuthState(firebaseAuth);
+  const [user, loading, error] = useAuthState(auth);
 
   React.useEffect(() => {
     const getIdToken = async () => {

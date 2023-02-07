@@ -1,19 +1,15 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-
 import {
   Box,
   Text,
   Image,
   Button,
-  Heading,
   Avatar,
   Stack,
-  Flex,
   Grid,
   GridItem,
   Center,
-  Divider,
   Input,
   Container,
   Tag,
@@ -21,23 +17,21 @@ import {
   Link,
   Card,
 } from '@chakra-ui/react';
-import useSWR from 'swr';
-
-import { BiHomeAlt, BiLibrary } from 'react-icons/bi';
-
-import { User, Project } from '../../types';
-import { useIdToken } from '@/hooks';
-import { format } from 'date-fns';
-import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
-
 import { LavlusIcon } from '@/components/icons';
+import { BiHomeAlt, BiLibrary } from 'react-icons/bi';
+// SWR
+import { User, Project } from '@/types';
+import useSWR from 'swr';
+// Utils
+import { format } from 'date-fns';
+// NextPage
+import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
 
 const ProjectList: NextPageWithLayoutAndPageExtraInfo = () => {
   const router = useRouter();
   const { username } = router.query;
-  const token = useIdToken();
-  const { data: projects } = useSWR<Project[]>([`/users/name/${username}/projects`, token]);
-  const { data: user } = useSWR<User>([`/me`, token]);
+  const { data: projects } = useSWR<Project[]>([`/users/name/${username}/projects`]);
+  const { data: user } = useSWR<User>([`/me`]);
 
   return (
     <>

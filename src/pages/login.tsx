@@ -23,7 +23,7 @@ import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
 import { StandardLayout } from '@/layouts';
 
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { firebaseAuth } from '@/utils';
+import { auth } from '@/utils';
 import { useRouter } from 'next/router';
 
 const Login: NextPageWithLayoutAndPageExtraInfo = () => {
@@ -32,7 +32,7 @@ const Login: NextPageWithLayoutAndPageExtraInfo = () => {
   const onSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(firebaseAuth, provider);
+      const result = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
       console.log(credential);
       router.push(`/${result.user.displayName}`);
@@ -43,7 +43,7 @@ const Login: NextPageWithLayoutAndPageExtraInfo = () => {
 
   const onSignOut = async () => {
     try {
-      await signOut(firebaseAuth);
+      await signOut(auth);
     } catch (err) {
       console.error(err);
     }
@@ -97,7 +97,7 @@ const Login: NextPageWithLayoutAndPageExtraInfo = () => {
           <ModalCloseButton />
           <ModalBody>
             <Text as="pre" overflow="hidden">
-              {JSON.stringify(firebaseAuth.currentUser, null, 2)}
+              {JSON.stringify(auth.currentUser, null, 2)}
             </Text>
           </ModalBody>
         </ModalContent>

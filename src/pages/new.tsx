@@ -1,5 +1,4 @@
 import React from 'react';
-import { NextPageWithLayoutAndPageExtraInfo, NewProjectValues } from '@/types';
 import {
   Text,
   Heading,
@@ -20,17 +19,26 @@ import {
   GeoJsonEditorControlled,
   PeriodMultiInputControlled,
 } from '@/components';
-import { firebaseAuth } from '@/utils';
-import { LavlusApi } from '@/utils';
-import { useRouter } from 'next/router';
 import { NewPageTitle, FormSection } from '@/components/pages/new';
+// RHF
+import { NewProjectValues } from '@/types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { addMonths } from 'date-fns';
+// API
+import { auth } from '@/utils';
+import { Lavlus } from '@/utils';
+import { useAuthState } from 'react-firebase-hooks/auth';
+// Hooks
+import { useRouter } from 'next/router';
 import * as yup from 'yup';
+// Utils
+import { addMonths } from 'date-fns';
 import * as turf from '@turf/turf';
 import _ from 'lodash';
+// NextPage
+import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
 
+// @ts-ignore
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
   name: yup
     .string()
@@ -64,7 +72,7 @@ const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
 
 const New: NextPageWithLayoutAndPageExtraInfo = () => {
   const router = useRouter();
-
+  const [user, loading, error] = useAuthState(auth);
   const {
     handleSubmit,
     register,
@@ -109,16 +117,11 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
       if (period.entity === 'day') return { ...period, dayOfWeek: [] };
       return period;
     });
-
+    // Debug
     console.log(JSON.stringify(values, null, 2));
-
-    if (firebaseAuth.currentUser) {
-      const data = await LavlusApi.createProject({
-        values,
-        token: await firebaseAuth.currentUser.getIdToken(),
-      });
-      if (data) router.replace(`/${firebaseAuth.currentUser.displayName}`);
-    }
+    // APIにフォーム送信
+    const data = await Lavlus.createProject(values);
+    if (data && user) router.replace(`/${user.displayName}`);
   };
 
   return (

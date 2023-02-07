@@ -15,20 +15,21 @@ import {
   FormControl,
 } from '@chakra-ui/react';
 import { BirthdayPicker } from 'react-birthday-picker';
-
+// RHF
+import { RequesterInfo } from '@/types';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
-import { NextPageWithLayoutAndPageExtraInfo, RequesterInfo } from '@/types';
-import { StandardLayout } from '@/layouts';
-
-import { firebaseAuth } from '@/utils';
-import { LavlusApi } from '@/utils';
-
+// API
+import { auth } from '@/utils';
+import { Lavlus } from '@/utils';
+import { useAuthState } from 'react-firebase-hooks/auth';
+// Utils
 import { parse } from 'date-fns';
-import ja from 'date-fns/locale/ja';
 import { useRouter } from 'next/router';
+// NextPage
+import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
+import { StandardLayout } from '@/layouts';
 
 // @ts-ignore
 const schema: yup.SchemaOf<Omit<RequesterInfo, 'createdAt' | 'updatedAt'>> = yup.object().shape({
@@ -45,7 +46,7 @@ const schema: yup.SchemaOf<Omit<RequesterInfo, 'createdAt' | 'updatedAt'>> = yup
 
 const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
   const router = useRouter();
-
+  const [user, loading, error] = useAuthState(auth);
   const {
     handleSubmit,
     register,
@@ -66,18 +67,13 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
   const onSubmit: SubmitHandler<RequesterInfo> = async (values) => {
     // Stringの生年月日をDateに変換
     if (typeof values.birthDate === 'string') {
-      values.birthDate = parse(values.birthDate, 'yyyy/MM/dd', new Date(), { locale: ja });
+      values.birthDate = parse(values.birthDate, 'yyyy/MM/dd', new Date());
     }
-
+    // Debug
     console.log(JSON.stringify(values, null, 2));
-
-    if (firebaseAuth.currentUser) {
-      const data = await LavlusApi.registerRequesterInfo({
-        values,
-        token: await firebaseAuth.currentUser.getIdToken(),
-      });
-      if (data) router.replace(`/${firebaseAuth.currentUser.displayName}`);
-    }
+    // APIにフォーム送信
+    const data = await Lavlus.registerRequesterInfo(values);
+    if (data && user) router.replace(`/${user.displayName}`);
   };
 
   return (
@@ -110,11 +106,7 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
               <Controller
                 control={control}
                 name="gender"
-                render={({
-                  field: { onChange, onBlur, value, name, ref },
-                  // fieldState: { invalid, isTouched, isDirty, error },
-                  // formState,
-                }) => (
+                render={({ field: { onChange, onBlur, value, name, ref } }) => (
                   <RadioGroup onChange={onChange} value={value}>
                     <Stack direction="row">
                       <Radio value="male">男性</Radio>
@@ -158,11 +150,7 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
               <Controller
                 control={control}
                 name="birthDate"
-                render={({
-                  field: { onChange, onBlur, value, name, ref },
-                  // fieldState: { invalid, isTouched, isDirty, error },
-                  // formState,
-                }) => (
+                render={({ field: { onChange, onBlur, value, name, ref } }) => (
                   <BirthdayPicker
                     onChange={onChange}
                     placeHolders={['日', '月', '年']}

@@ -1,67 +1,42 @@
 import axios, { CancelToken } from 'axios';
-import { User, NewProjectValues, RequesterInfo } from '../types';
-
-interface Auth extends User {
-  token: string;
-}
+import { User, NewProjectValues, RequesterInfo, Project } from '../types';
+import { getFirebaseIdToken } from '@/utils';
 
 const SERVER_URL = 'https://lavlus-api.ayaka.work';
 
-export const fetcher = async (path: string, token?: string) => {
-  const config = token ? { headers: { Authorization: 'Bearer ' + token } } : {};
-  const { data } = await axios.get(SERVER_URL + path, config);
-  return data;
+export const fetcher = async (path: string) => {
+  const token = await getFirebaseIdToken();
+  if (token) {
+    // ログイン済み
+    const config = { headers: { Authorization: 'Bearer ' + token } };
+    const { data } = await axios.get(SERVER_URL + path, config);
+    return data;
+  } else {
+    // 未ログイン
+    const { data } = await axios.get(SERVER_URL + path);
+    return data;
+  }
 };
 
-export namespace LavlusApi {
-  export interface LoginArgs {
-    email: string;
-    password: string;
-  }
-  export const login = async ({ email, password }: LoginArgs): Promise<Auth | null> => {
+export namespace Lavlus {
+  // 依頼者登録
+  export const registerRequesterInfo = async (values: RequesterInfo): Promise<User | null> => {
+    const token = await getFirebaseIdToken();
     try {
-      const { data } = await axios.post(`${SERVER_URL}/users/login`, {
-        email,
-        password,
-      });
-      return data ? { ...data, name: data.username } : null;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  export interface RegisterRequesterInfoArgs {
-    values: Omit<RequesterInfo, 'createdAt' | 'updatedAt'>;
-    token: string;
-  }
-  export const registerRequesterInfo = async ({
-    values,
-    token,
-  }: RegisterRequesterInfoArgs): Promise<User | null> => {
-    try {
-      const { data } = await axios.patch<User>(`${SERVER_URL}/me/requesterInfo`, values, {
-        headers: { Authorization: 'Bearer ' + token },
-      });
+      const config = { headers: { Authorization: 'Bearer ' + token } };
+      const { data } = await axios.patch<User>(`${SERVER_URL}/me/requesterInfo`, values, config);
       return data;
     } catch (error) {
       console.error(error);
       return null;
     }
   };
-
-  export interface CreateProjectArgs {
-    values: NewProjectValues;
-    token: string;
-  }
-  export const createProject = async ({
-    values,
-    token,
-  }: CreateProjectArgs): Promise<any | null> => {
+  // プロジェクト作成
+  export const createProject = async (values: NewProjectValues): Promise<Project | null> => {
+    const token = await getFirebaseIdToken();
     try {
-      const { data } = await axios.post(`${SERVER_URL}/projects`, values, {
-        headers: { Authorization: 'Bearer ' + token },
-      });
+      const config = { headers: { Authorization: 'Bearer ' + token } };
+      const { data } = await axios.post<Project>(`${SERVER_URL}/projects`, values, config);
       return data;
     } catch (error) {
       console.error(error);
