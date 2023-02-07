@@ -21,10 +21,7 @@ export const PeriodInput = ({
   onChange,
 }: PeriodInputProps) => {
   const [value, setValue] = React.useState<Period>(defaultValue);
-
   const handleChange = (newValue: Partial<Period>) => {
-    // TODO: 型の修正した方がいい
-    // @ts-ignore
     onChange && onChange({ ...value, ...newValue });
     setValue({ ...value, ...newValue });
   };
