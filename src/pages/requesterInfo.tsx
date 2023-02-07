@@ -17,13 +17,15 @@ import {
 import { BirthdayPicker } from 'react-birthday-picker';
 // RHF
 import { RequesterInfo } from '@/types';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler, SubmitErrorHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 // API
 import { auth } from '@/utils';
 import { Lavlus } from '@/utils';
 import { useAuthState } from 'react-firebase-hooks/auth';
+// Hooks
+import { useToast } from '@chakra-ui/react';
 // Utils
 import { parse } from 'date-fns';
 import { useRouter } from 'next/router';
@@ -31,6 +33,7 @@ import { useRouter } from 'next/router';
 import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
 import { StandardLayout } from '@/layouts';
 
+// FIXME: ちゃんと型定義をあわせる
 // @ts-ignore
 const schema: yup.SchemaOf<Omit<RequesterInfo, 'createdAt' | 'updatedAt'>> = yup.object().shape({
   realm: yup.string().required('必須項目です'),
@@ -47,6 +50,8 @@ const schema: yup.SchemaOf<Omit<RequesterInfo, 'createdAt' | 'updatedAt'>> = yup
 const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
+  const toast = useToast({ duration: 5000, position: 'bottom-right' });
+
   const {
     handleSubmit,
     register,
@@ -72,14 +77,39 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
     // Debug
     console.log(JSON.stringify(values, null, 2));
     // APIにフォーム送信
-    const data = await Lavlus.registerRequesterInfo(values);
-    if (data && user) router.replace(`/${user.displayName}`);
+    try {
+      const data = await Lavlus.registerRequesterInfo(values);
+      if (data && user) {
+        router.replace(`/${user.displayName}`);
+        toast({
+          title: '依頼者登録に成功しました',
+          status: 'success',
+        });
+      } else {
+        toast({
+          title: '不明なエラーが発生しました',
+          status: 'error',
+        });
+      }
+    } catch (err) {
+      toast({
+        title: 'サーバーとの通信に失敗しました',
+        status: 'error',
+      });
+    }
+  };
+
+  const onError: SubmitErrorHandler<RequesterInfo> = (errors) => {
+    toast({
+      title: '入力に不備があります',
+      status: 'warning',
+    });
   };
 
   return (
     <Container maxW="1000px">
       <Center h="100%" py={16}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <Stack gap={4} align="center">
             <Heading size="3xl">依頼者登録 🎓</Heading>
             <Text maxW="500px">

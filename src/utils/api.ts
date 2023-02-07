@@ -20,28 +20,18 @@ export const fetcher = async (path: string) => {
 
 export namespace Lavlus {
   // 依頼者登録
-  export const registerRequesterInfo = async (values: RequesterInfo): Promise<User | null> => {
+  export const registerRequesterInfo = async (values: RequesterInfo): Promise<User> => {
     const token = await getFirebaseIdToken();
-    try {
-      const config = { headers: { Authorization: 'Bearer ' + token } };
-      const { data } = await axios.patch<User>(`${SERVER_URL}/me/requesterInfo`, values, config);
-      return data;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    const config = { headers: { Authorization: 'Bearer ' + token } };
+    const { data } = await axios.patch<User>(`${SERVER_URL}/me/requesterInfo`, values, config);
+    return data;
   };
   // プロジェクト作成
-  export const createProject = async (values: NewProjectValues): Promise<Project | null> => {
+  export const createProject = async (values: NewProjectValues): Promise<Project> => {
     const token = await getFirebaseIdToken();
-    try {
-      const config = { headers: { Authorization: 'Bearer ' + token } };
-      const { data } = await axios.post<Project>(`${SERVER_URL}/projects`, values, config);
-      return data;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    const config = { headers: { Authorization: 'Bearer ' + token } };
+    const { data } = await axios.post<Project>(`${SERVER_URL}/projects`, values, config);
+    return data;
   };
 
   export interface DownloadSensingDataArgs {

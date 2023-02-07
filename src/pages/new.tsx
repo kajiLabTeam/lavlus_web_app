@@ -22,13 +22,14 @@ import {
 import { NewPageTitle, FormSection } from '@/components/pages/new';
 // RHF
 import { NewProjectValues } from '@/types';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, SubmitErrorHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import { auth } from '@/utils';
 import { Lavlus } from '@/utils';
 import { useAuthState } from 'react-firebase-hooks/auth';
 // Hooks
+import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 // Utils
@@ -38,6 +39,7 @@ import _ from 'lodash';
 // NextPage
 import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
 
+// FIXME: ちゃんと型定義をあわせる
 // @ts-ignore
 const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
   name: yup
@@ -73,6 +75,8 @@ const schema: yup.SchemaOf<NewProjectValues> = yup.object().shape({
 const New: NextPageWithLayoutAndPageExtraInfo = () => {
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
+  const toast = useToast({ duration: 5000, position: 'bottom-right' });
+
   const {
     handleSubmit,
     register,
@@ -120,12 +124,36 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
     // Debug
     console.log(JSON.stringify(values, null, 2));
     // APIにフォーム送信
-    const data = await Lavlus.createProject(values);
-    if (data && user) router.replace(`/${user.displayName}`);
+    try {
+      const data = await Lavlus.createProject(values);
+      if (data && user) {
+        router.replace(`/${user.displayName}`);
+        toast({
+          title: 'プロジェクトの作成に成功しました',
+          status: 'success',
+        });
+      } else {
+        toast({
+          title: '不明なエラーが発生しました',
+          status: 'error',
+        });
+      }
+    } catch (err) {
+      toast({
+        title: 'サーバーとの通信に失敗しました',
+        status: 'error',
+      });
+    }
+  };
+  const onError: SubmitErrorHandler<NewProjectValues> = (errors) => {
+    toast({
+      title: '入力に不備があります',
+      status: 'warning',
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onError)}>
       <Container maxW="1000px" py={6} px={0}>
         <Stack spacing={24}>
           <NewPageTitle />
