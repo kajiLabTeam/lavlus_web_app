@@ -25,8 +25,8 @@ import { NewProjectValues } from '@/types';
 import { useForm, SubmitHandler, SubmitErrorHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
-import { auth } from '@/utils';
 import { Lavlus } from '@/utils';
+import { auth } from '@/utils';
 import { useAuthState } from 'react-firebase-hooks/auth';
 // Hooks
 import { useToast } from '@chakra-ui/react';
@@ -38,6 +38,7 @@ import * as turf from '@turf/turf';
 import _ from 'lodash';
 // NextPage
 import { NextPageWithLayoutAndPageExtraInfo } from '@/types';
+import { StandardLayout } from '@/layouts';
 
 // FIXME: ちゃんと型定義をあわせる
 // @ts-ignore
@@ -154,7 +155,7 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
-      <Container maxW="1000px" py={6} px={0}>
+      <Container maxW="container.lg" py={16}>
         <Stack spacing={24}>
           <NewPageTitle />
           <FormSection
@@ -278,5 +279,8 @@ const New: NextPageWithLayoutAndPageExtraInfo = () => {
   );
 };
 
+New.getLayout = (page: React.ReactElement) => {
+  return <StandardLayout>{page}</StandardLayout>;
+};
 New.needsAuthentication = true;
 export default New;

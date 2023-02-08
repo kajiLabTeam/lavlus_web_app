@@ -53,8 +53,8 @@ const Login: NextPageWithLayoutAndPageExtraInfo = () => {
 
   return (
     <>
-      <Container maxW="1000px">
-        <Center h="100%" py={16}>
+      <Container minH="inherit" maxW="container.lg">
+        <Center minH="inherit" py={16}>
           <Stack gap={12} align="center">
             <Heading size="2xl">サインアップ 🚀</Heading>
             <Text maxW="500px">
@@ -109,4 +109,5 @@ const Login: NextPageWithLayoutAndPageExtraInfo = () => {
 Login.getLayout = (page: React.ReactElement) => {
   return <StandardLayout>{page}</StandardLayout>;
 };
+Login.needsAuthentication = false;
 export default Login;

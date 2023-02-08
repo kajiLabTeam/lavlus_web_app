@@ -107,8 +107,8 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
   };
 
   return (
-    <Container maxW="1000px">
-      <Center h="100%" py={16}>
+    <Container minH="inherit" maxW="container.lg">
+      <Center minH="inherit" py={16}>
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           <Stack gap={4} align="center">
             <Heading size="3xl">依頼者登録 🎓</Heading>
@@ -219,4 +219,5 @@ const RequesterInfo: NextPageWithLayoutAndPageExtraInfo = () => {
 RequesterInfo.getLayout = (page: React.ReactElement) => {
   return <StandardLayout>{page}</StandardLayout>;
 };
+RequesterInfo.needsAuthentication = false;
 export default RequesterInfo;

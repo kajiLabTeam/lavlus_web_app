@@ -1,47 +1,101 @@
-import { Box, Center, Stack, Text, Grid, GridItem, Avatar, HStack, Link } from '@chakra-ui/react';
+import { Box, Center, Text, Input, Avatar, HStack, Link, Button } from '@chakra-ui/react';
 import { LavlusIcon } from '@/components/icons';
+import { auth } from '@/utils';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
+import { AiOutlineLogout, AiFillSetting, AiFillBell } from 'react-icons/ai';
 
 export const StandardLayout = ({ children }: { children: React.ReactElement }) => {
   return (
-    <Grid minH="100vh" templateRows="auto 1fr auto">
-      <HStack p={4} py={3} top={0} position="sticky" bg="white" borderBottom="1px solid #EDF2F7">
-        <Link href="/">
-          <HStack>
-            <LavlusIcon w="36px" h="36px" />
-            <Text fontSize="2xl" fontWeight="bold">
-              lavlus
-            </Text>
-          </HStack>
-        </Link>
-      </HStack>
+    <>
+      <Header />
+      <Box as="main" w="100%" minH="calc(100vh - 150px)">
+        {children}
+      </Box>
+      <Footer />
+    </>
+  );
+};
 
-      {children}
+const Header = () => {
+  const router = useRouter();
+  const [user, loading, error] = useAuthState(auth);
+  return (
+    <HStack
+      w="100%"
+      h="60px"
+      p={4}
+      position="sticky"
+      zIndex={9999}
+      bg="white"
+      boxShadow="0px 0px 12px -4px #777777"
+      spacing={4}
+    >
+      <Button colorScheme="whiteAlpha" onClick={() => router.push('/')} p={0}>
+        <HStack>
+          <LavlusIcon w="32px" h="32px" />
+          <Text fontSize="xl" fontWeight="bold" color="black">
+            Lavlus
+          </Text>
+        </HStack>
+      </Button>
 
-      <Stack h="100px" bottom={0} position="sticky" bg="#F0F0F0" align="flex-end">
-        <Grid
-          templateAreas={`
-          "text logo"
-          "link logo"
-          `}
-          templateRows="1fr, 1fr"
-          templateColumns="auto, 64px"
-          gap={2}
-          my="auto"
-          pr={4}
-        >
-          <GridItem area={'text'}>
-            <Text fontSize="lg">Powered By Kaji Lab.</Text>
-          </GridItem>
-          <GridItem area={'link'}>
-            <Link href="https://kajilab.net">https://kajilab.net</Link>
-          </GridItem>
-          <GridItem area={'logo'}>
-            <Center w="100%" height="100%">
-              <Avatar size="lg" src="https://kajilab.net/hpg/img/main/logo.jpg" />
-            </Center>
-          </GridItem>
-        </Grid>
-      </Stack>
-    </Grid>
+      {user ? (
+        <>
+          <Input
+            width={300}
+            size="sm"
+            placeholder="依頼者 / プロジェクトを探す"
+            borderRadius="full"
+          />
+          <Box flex={1} />
+          <AiFillBell size={24} />
+          <AiFillSetting size={24} />
+          <AiOutlineLogout size={24} />
+          <Avatar
+            size="sm"
+            name={user.displayName ?? ''}
+            src={user.photoURL ?? ''}
+            onClick={() => router.push(`/${user.displayName}`)}
+          />
+        </>
+      ) : (
+        <>
+          <Box flex={1} />
+          <Button colorScheme="orange" onClick={() => router.push('/login')}>
+            ログイン
+          </Button>
+        </>
+      )}
+    </HStack>
+  );
+};
+
+const Footer = () => {
+  return (
+    <HStack
+      w="100%"
+      h="90px"
+      position="sticky"
+      zIndex={9999}
+      bg="#F0F0F0"
+      justify="flex-end"
+      px={4}
+      spacing={4}
+    >
+      <Center h="100%">
+        <Box>
+          <Text fontSize="lg" fontWeight="bold" color="gray.600">
+            Powered By Kaji Lab.
+          </Text>
+          <Link href="https://kajilab.net" fontSize="lg" color="blue.400">
+            https://kajilab.net
+          </Link>
+        </Box>
+      </Center>
+      <Center height="100%">
+        <Avatar w={16} h={16} src="https://kajilab.net/hpg/img/main/logo.jpg" />
+      </Center>
+    </HStack>
   );
 };
