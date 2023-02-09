@@ -1,16 +1,22 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Box, Text, Image, Stack, Grid, Tag, HStack, Card } from '@chakra-ui/react';
-// SWR
-import { User, Project } from '@/types';
 // Utils
 import { format } from 'date-fns';
 import ja from 'date-fns/locale/ja';
+// Types
+import { User, Project } from '@/types';
 
-export const ProjectCard = ({ project, user }: { project: Project; user: User }) => {
+export const ProjectCard = ({ project, owner }: { project: Project; owner: User }) => {
   const router = useRouter();
+
   return (
-    <Card boxShadow="0px 0px 12px -4px #777777" borderRadius={24}>
+    <Card
+      boxShadow="0px 0px 12px -4px #777777"
+      borderRadius={24}
+      cursor="pointer"
+      onClick={() => router.push(`/${owner.name}/${project.id}`)}
+    >
       <Grid templateColumns={'200px 1fr'}>
         <Image
           borderRadius="24px 0 0 24px"
