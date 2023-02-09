@@ -25,6 +25,7 @@ const Header = () => {
       w="100%"
       h="60px"
       p={4}
+      top={0}
       position="sticky"
       zIndex={9999}
       bg="white"
