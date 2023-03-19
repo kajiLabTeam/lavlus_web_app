@@ -1,7 +1,7 @@
 lavlus_web_app
 ===
 
-これは、[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) でブートストラップされた [Next.js](https://nextjs.org/) プロジェクトです。 /create-next-app)。
+これは、[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) でブートストラップされた [Next.js](https://nextjs.org/) プロジェクトです。
 
 ## セットアップ
 
