@@ -2,7 +2,7 @@ import axios, { CancelToken } from 'axios';
 import { User, NewProjectValues, RequesterInfo, Project } from '../types';
 import { getFirebaseIdToken } from '@/utils';
 
-const SERVER_URL = 'https://lavlus-api.ayaka.work';
+const SERVER_URL = 'https://lavlus-api.kajilab.tk';
 
 export const fetcher = async (path: string) => {
   const token = await getFirebaseIdToken();
