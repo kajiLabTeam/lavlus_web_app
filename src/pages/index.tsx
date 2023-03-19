@@ -18,6 +18,14 @@ const LandingPage: NextPageWithLayoutAndPageExtraInfo = () => {
           <Link onClick={() => router.push('/login')}>ログインページへ</Link>
         </Stack>
       </Center>
+
+      <Center py={16} style={{backgroundColor: "green"}}>
+        <Stack align="center" gap={12} style={{backgroundColor: "blue"}}>
+          <p style={{backgroundColor: "red"}}>
+            hogehoge
+          </p>
+        </Stack>
+      </Center>
     </Container>
   );
 };
