@@ -1,34 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+lavlus_web_app
+===
 
-## Getting Started
+これは、[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) でブートストラップされた [Next.js](https://nextjs.org/) プロジェクトです。 /create-next-app)。
 
-First, run the development server:
+## セットアップ
+
+### 開発に使用しているバージョン
+❯ npm -v　9.4.2
+
+❯ node -v　v16.14.2
+
+### 起動のさせ方
 
 ```bash
+
+npm install
+
 npm run dev
 # or
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ [http://localhost:3000](http://localhost:3000)　を開くことで、テスト用のWebサイトを開くことができます。
+ 
+## Gitの運用
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### 基本指針
+[gitflow](https://www.atlassian.com/ja/git/tutorials/comparing-workflows/gitflow-workflow)を指針として採用します。
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### develop
+開発ブランチです。
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### feature
+機能ブランチです。developから派生します。
 
-## Learn More
+issueの番号をサブブランチとします。feature/{番号}
+issueがない場合はサブブランチをケバブケースで命名すること (例:feature/some-feature)
+developにマージ、リモートの機能ブランチは削除
 
-To learn more about Next.js, take a look at the following resources:
+### release
+リリース作業ブランチです。以下のサブブランチにて配信の自動配信に利用します。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### main
+本番ブランチです。
+プロダクション環境での動作保証、かつストアの公開状態と同じであることが求められます。releaseまたはhotfixをマージします。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
