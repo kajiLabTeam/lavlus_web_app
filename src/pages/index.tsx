@@ -27,3 +27,4 @@ LandingPage.getLayout = (page: React.ReactElement) => {
 };
 LandingPage.needsAuthentication = false;
 export default LandingPage;
+
