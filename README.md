@@ -34,9 +34,9 @@ yarn dev
 ### feature
 機能ブランチです。developから派生します。
 
-issueの番号をサブブランチとします。feature/{番号}
-issueがない場合はサブブランチをケバブケースで命名すること (例:feature/some-feature)
-developにマージ、リモートの機能ブランチは削除
+- issueの番号をサブブランチとします。feature/{番号}
+- issueがない場合はサブブランチをケバブケースで命名すること (例:feature/some-feature)
+- developにマージ、リモートの機能ブランチは削除
 
 ### release
 リリース作業ブランチです。以下のサブブランチにて配信の自動配信に利用します。
